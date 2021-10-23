@@ -16,7 +16,7 @@ const SignIn = () => {
   const formRef = useRef(null);
 
   const navigateToRegister = () => {
-    navigation.navigate('register');
+    navigation.navigate('signup');
   }
 
   const handleSubmit = async (data) => {

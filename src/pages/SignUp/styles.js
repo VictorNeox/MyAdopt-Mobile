@@ -2,6 +2,7 @@ import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 import Input from '../../components/Input';
+import InputMask from '../../components/InputMask';
 
 export const Container = styled.View`
   background-color: #7305e1;
@@ -25,6 +26,14 @@ export const Title = styled.Text`
 `;
 
 export const StyledInput = styled(Input)`
+  width: 250px;
+  border-radius: 10px;
+  height: 40px;
+  margin: 5px 0;
+  background-color: #ebd7fe;
+`;
+
+export const StyledInputMask = styled(InputMask)`
   width: 250px;
   border-radius: 10px;
   height: 40px;
@@ -83,7 +92,7 @@ export const NumberInput = styled(StyledInput)`
 export const LatLongView = styled(CityView)`
 `;
 
-export const LatLongInput = styled(StyledInput)`
+export const LatLongInput = styled(StyledInputMask)`
   width: 122px;
   margin-right: 5px;
 `;

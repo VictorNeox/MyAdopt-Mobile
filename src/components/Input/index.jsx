@@ -4,7 +4,7 @@ import { useField } from '@unform/core';
 
 import { TextInput, ErrorText } from './styles';
 
-const Input = ({ name, label, onChangeText, ...rest }) => {
+const Input = ({ name, label, onChangeText, customOnChange = null, rawText, onInitialData, ...rest }) => {
   const inputRef = useRef(null);
   const { fieldName, registerField, defaultValue, error } = useField(name);
 
@@ -20,8 +20,8 @@ const Input = ({ name, label, onChangeText, ...rest }) => {
   }
 
   useEffect(() => {
-    inputRef.current.value = defaultValue;
-  }, [defaultValue]);
+    if (onInitialData) onInitialData(defaultValue);
+  }, [defaultValue, onInitialData]);
 
   useEffect(() => {
     if (inputRef.current) inputRef.current.value = defaultValue;
@@ -32,6 +32,7 @@ const Input = ({ name, label, onChangeText, ...rest }) => {
       name: fieldName,
       ref: inputRef.current,
       getValue() {
+        if (rawText) return rawText;
         if (inputRef.current) return inputRef.current.value;
         return '';
       },
@@ -49,22 +50,21 @@ const Input = ({ name, label, onChangeText, ...rest }) => {
       },
     });
 
-  }, [fieldName, registerField]);
+  }, [fieldName, rawText, registerField]);
 
   const handleChangeText = useCallback(
     text => {
       if (inputRef.current) inputRef.current.value = text;
       if (onChangeText) onChangeText(text);
+      if (customOnChange) customOnChange();
     },
     [onChangeText],
   );
 
   return (
-    <>
+    <View style={{ flexDirection: 'column' }}>
       {error && (
-        <View style={{ flexWrap: 'wrap' }}>
           <ErrorText>{error}</ErrorText>
-        </View>
       )}
       <TextInput
         ref={inputRef}
@@ -76,7 +76,7 @@ const Input = ({ name, label, onChangeText, ...rest }) => {
         isErrored={!!error}
         {...rest}
       />
-    </>
+    </View>
   );
 
 }
