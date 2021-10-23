@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { Text } from 'react-native';
+import { View } from 'react-native';
 import { useField } from '@unform/core';
 
 import { TextInput, ErrorText } from './styles';
@@ -61,7 +61,11 @@ const Input = ({ name, label, onChangeText, ...rest }) => {
 
   return (
     <>
-      {error && <ErrorText>{error}</ErrorText>}
+      {error && (
+        <View style={{ flexWrap: 'wrap' }}>
+          <ErrorText>{error}</ErrorText>
+        </View>
+      )}
       <TextInput
         ref={inputRef}
         onChangeText={handleChangeText}

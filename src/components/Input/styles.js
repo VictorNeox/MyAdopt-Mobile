@@ -13,10 +13,13 @@ export const TextInput = styled.TextInput`
   ${props => (props.isFocused && props.hasFocusColor) && css`
     border: 1px solid #4dd0e1;
   `}
+  
+  padding: 10px;
 `;
 
 export const ErrorText = styled.Text`
   color: red;
   font-size: 12px;
   margin-left: 2px;
+  flex-wrap: wrap;
 `;

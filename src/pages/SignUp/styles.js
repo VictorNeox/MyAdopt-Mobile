@@ -1,10 +1,7 @@
-import Constants from 'expo-constants';
+import { TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
 
 import Input from '../../components/Input';
-
-import { TouchableOpacity } from 'react-native';
-
-import styled from 'styled-components/native';
 
 export const Container = styled.View`
   background-color: #7305e1;
@@ -15,21 +12,16 @@ export const Container = styled.View`
   padding: 0 30px ${Platform.OS === "android" ? 50 : 30}px;
 `;
 
-export const Header = styled.View`
-  display: flex;
-  align-items: center;
-`;
-
-export const Logo = styled.Image`
-  width: 250px;
-  height: 250px;
+export const Image = styled.Image`
+  width: 100px;
+  height: 100px;
 `;
 
 export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
-  color: #fff;
-  margin: 10px;
+  color: #fff
+  margin: 30px;
 `;
 
 export const StyledInput = styled(Input)`
@@ -42,17 +34,16 @@ export const StyledInput = styled(Input)`
 
 export const Actions = styled.View`
   margin-top: 12px;
-  flex-direction: column;
-  width: 250px;
-  justify-content: space-evenly;
+  flex-direction: row;
+  justify-content: space-around;
 `;
 
 export const Action = styled(TouchableOpacity)`
   background-color: #e02041;
   border-radius: 15px;
   height: 40px;
-  margin-right: 15px;
-  width: 100%;
+  width: 35%;
+  margin: 0 5px;
   justify-content: center;
   align-items: center;
   margin-bottom: 8px;
@@ -64,13 +55,35 @@ export const ActionText = styled.Text`
   font-weight: bold;
 `;
 
-export const ForgotYourPass = styled.View`
-  align-items: flex-end;
+export const CityView = styled.View`
+  flex-direction: row;
 `;
 
-export const ForgotYourPassText = styled.Text`
-  color: #fff;
-  opacity: 0.6;
-  margin-right: 8px;
-  font-size: 12px;
+export const CityInput = styled(StyledInput)`
+  width: 195px;
+`;
+
+export const UfInput = styled(StyledInput)`
+  width: 50px;
+  margin-left: 5px;
+`;
+
+export const StreetView = styled(CityView)`
+`;
+
+export const StreetInput = styled(StyledInput)`
+  width: 195px;
+`;
+
+export const NumberInput = styled(StyledInput)`
+  width: 50px;
+  margin-left: 5px;
+`;
+
+export const LatLongView = styled(CityView)`
+`;
+
+export const LatLongInput = styled(StyledInput)`
+  width: 122px;
+  margin-right: 5px;
 `;

@@ -1,15 +1,14 @@
 import React, { useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { Container, Logo, HeaderText, TextInput, Actions, Action, ActionText, ForgotYourPass, ForgotYourPassText, StyledInput } from './styles';
+import { Container, Logo, Header, Title, TextInput, Actions, Action, ActionText, ForgotYourPass, ForgotYourPassText, StyledInput } from './styles';
 import * as Yup from 'yup';
 import { Form } from '@unform/mobile';
 
 import logo from '../../assets/logo.png';
 
 import getValidationErrors from '../../utils/getValidationErrors';
+import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -28,6 +27,7 @@ const SignIn = () => {
     });
 
     try {
+      formRef.current?.setErrors({});
       await schema.validate(data, { abortEarly: false });
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
@@ -39,30 +39,38 @@ const SignIn = () => {
   }
 
   return (
-    <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: "#7305e1" }} >
-      <Container>
-        <Logo source={logo} />
-        <HeaderText>Faça seu login</HeaderText>
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <StyledInput name="user" placeholder="Usuário" hasFocusColor />
-          <StyledInput name="password" placeholder="Senha" type="password" secureTextEntry={true} hasFocusColor/>
+      <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "height"} enabled>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flex: 1 }}
+        >
 
-          <ForgotYourPass>
-            <ForgotYourPassText>Esqueceu sua senha?</ForgotYourPassText>
-          </ForgotYourPass>
-          <Actions>
+          <Container>
+              <Logo source={logo} />
+              <View>
+                <Title>Faça seu login</Title>
+              </View>
+              <Form ref={formRef} onSubmit={handleSubmit}>
+                <StyledInput name="user" placeholder="Usuário" hasFocusColor />
+                <StyledInput name="password" placeholder="Senha" type="password" secureTextEntry hasFocusColor/>
 
-            <Action onPress={() => formRef.current.submitForm()}>
-              <ActionText>Entrar</ActionText>
-            </Action>
+                <ForgotYourPass>
+                  <ForgotYourPassText>Esqueceu sua senha?</ForgotYourPassText>
+                </ForgotYourPass>
+                <Actions>
 
-            <Action onPress={navigateToRegister}>
-              <ActionText>Registre-se</ActionText>
-            </Action>
-          </Actions>
-        </Form>
-      </Container>
-    </KeyboardAwareScrollView>
+                  <Action onPress={() => formRef.current.submitForm()}>
+                    <ActionText>Entrar</ActionText>
+                  </Action>
+
+                  <Action onPress={navigateToRegister}>
+                    <ActionText>Registre-se</ActionText>
+                  </Action>
+                </Actions>
+              </Form>
+          </Container>
+        </ScrollView>
+      </KeyboardAvoidingView>
   );
 }
 

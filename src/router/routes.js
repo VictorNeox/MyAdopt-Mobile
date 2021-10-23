@@ -7,17 +7,15 @@ const AppStack = createStackNavigator();
 import { isSignedIn } from '../services/auth';
 
 import SignIn from '../pages/SignIn';
-// import Register from './pages/Register';
+import SignUp from '../pages/SignUp';
 // import Home from './pages/Home';
 
 export default function Routes() {
     return(
-        <NavigationContainer>
-            <AppStack.Navigator screenOptions={{ headerShown: false }}>
-                <AppStack.Screen name="signin" component={SignIn}/>
-                    <AppStack.Screen name="register" component={SignIn}/>
-            </AppStack.Navigator>
-        </NavigationContainer>
+        <AppStack.Navigator screenOptions={{ headerShown: false }}>
+            <AppStack.Screen name="register" component={SignUp}/>
+            <AppStack.Screen name="signin" component={SignIn}/>
+        </AppStack.Navigator>
     );
   }
   // {isSignedIn ? (
