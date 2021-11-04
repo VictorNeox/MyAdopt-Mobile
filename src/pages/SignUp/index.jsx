@@ -17,10 +17,6 @@ const SignUp = () => {
   const formRef = useRef(null);
   const navigation = useNavigation();
 
-  const navigateToLogin = () => {
-    navigation.navigate('signin')
-  }
-
   useEffect(() => {
     async function loadInitialPosition() {
         const {granted} = await requestForegroundPermissionsAsync();
@@ -85,12 +81,6 @@ const SignUp = () => {
               <View>
                 <StyledInput name="name" placeholder="Nome completo" hasFocusColor />
                 <StyledInput name="user" placeholder="Usuário" hasFocusColor />
-                <StyledInputMask
-                  type={'cpf'}
-                  name="cpf" 
-                  placeholder="CPF" 
-                  hasFocusColor 
-                />
                 <StyledInput name="password" placeholder="Senha" secureTextEntry />
                 <StyledInput name="passwordConfirmation" placeholder="Confirme sua senha" secureTextEntry hasFocusColor />
               </View>

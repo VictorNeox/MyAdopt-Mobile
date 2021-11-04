@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-navigation/material-bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/stack": "^6.0.11",
     "@unform/core": "^2.1.6",
@@ -22,10 +23,12 @@
     "react-native-gesture-handler": "^1.10.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-masked-text": "^1.13.0",
+    "react-native-paper": "^4.10.0",
     "react-native-reanimated": "^2.2.3",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.8.0",
     "react-native-step-indicator": "^1.0.3",
+    "react-native-vector-icons": "^9.0.0",
     "react-native-web": "^0.17.1",
     "styled-components": "^5.3.3",
     "yup": "^0.32.11"

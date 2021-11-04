@@ -6,15 +6,15 @@ import Routes from './src/router/routes';
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <View style={{ flex: 1, backgroundColor: "#7305e1" }}>
       <StatusBar
         barStyle="light-content"
         backgroundColor="#7305e1"
         translucent
       />
-        <View style={{ flex: 1, backgroundColor: "#7305e1" }}>
-          <Routes />
-        </View>
-    </NavigationContainer>
+      <NavigationContainer>
+            <Routes />
+      </NavigationContainer>
+    </View>
   );
 }

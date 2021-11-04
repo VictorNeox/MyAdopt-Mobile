@@ -19,6 +19,10 @@ const SignIn = () => {
     navigation.navigate('signup');
   }
 
+  const navigateToHome = () => {
+    navigation.navigate('root', { screen: 'home' });
+  }
+
   const handleSubmit = async (data) => {
 
     const schema = Yup.object().shape({
@@ -59,7 +63,7 @@ const SignIn = () => {
                 </ForgotYourPass>
                 <Actions>
 
-                  <Action onPress={() => formRef.current.submitForm()}>
+                  <Action onPress={navigateToHome}>
                     <ActionText>Entrar</ActionText>
                   </Action>
 
