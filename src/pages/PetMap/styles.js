@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 export const SearchForm = styled.View`
   position: absolute;
   top: 50px;
+  top: ${(props) => Platform.OS === 'android' ? `${StatusBar.currentHeight + 20}px` : '0px' }
   left: 20px;
   right: 20px;
   z-index: 5;
