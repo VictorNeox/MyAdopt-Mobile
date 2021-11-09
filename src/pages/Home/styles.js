@@ -50,16 +50,17 @@ export const UserContainer = styled.View`
 export const UserInformation = styled.View`
   padding-top: 30px;
   padding-left: 10px;
-  color: #4d4d4d;
+  color: #616161;
 `;
 
 export const UserName = styled.Text`
-
+  color: #2b2b2b;
 `;
 
 
 export const Address = styled.Text`
   font-size: 10px;
+  color: #2b2b2b;
 `;
 
 export const UserImage = styled.Image`
@@ -77,7 +78,7 @@ export const PostInformation = styled.View`
 `;
 
 export const PostText = styled.Text`
-  color: #41414d;
+  color: #616161;
 `;
 
 export const LikesContainer = styled.View`

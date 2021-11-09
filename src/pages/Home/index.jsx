@@ -151,7 +151,7 @@ const Home = () => {
                 <MaterialCommunityIcons
                   name='alert'
                   size={22}
-                  color={'#e02041'}
+                  color='#d12121'
                 />
               </TouchableOpacity>
               <UserImage
@@ -166,7 +166,6 @@ const Home = () => {
               <PostText>
                 Nome: {post.petName}
                 <MaterialCommunityIcons
-                  style={{ paddingLeft: 8 }}
                   name={post.gender.toLocaleLowerCase() === 'macho' ? 'gender-male' : 'gender-female'}
                   size={16}
                   color={post.gender.toLocaleLowerCase() === 'macho' ? '#00ADEF' : '#EA168F'}
