@@ -70,9 +70,9 @@ const Home = () => {
         uf: 'SP'
       },
       petImages: [
+        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg',
         'https://www.petz.com.br/cachorro/racas/husky-siberiano/img/husky-siberiano-caracteristicas-guia-racas.webp',
         'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg'
       ],
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,
@@ -93,9 +93,7 @@ const Home = () => {
         uf: 'SP'
       },
       petImages: [
-        'https://www.petz.com.br/cachorro/racas/husky-siberiano/img/husky-siberiano-caracteristicas-guia-racas.webp',
         'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg'
       ],
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,

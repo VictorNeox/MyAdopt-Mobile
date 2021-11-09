@@ -27,7 +27,9 @@ const CustomSlider = ({ data }) => {
 
   return (
     <View>
+      {data.length > 1 && (
        <IndexIndicator style={{ borderRadius: 100 }}>{index}/{data.length}</IndexIndicator>
+      )}
        <Carousel {...settings} />
     </View>
   );
