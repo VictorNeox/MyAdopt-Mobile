@@ -15,8 +15,8 @@ export default function Routes() {
     return(
         <AppStack.Navigator screenOptions={{ headerShown: false }}>
             <AppStack.Screen name="signin" component={SignIn}/>
-            <AppStack.Screen name="signup" component={SignUp}/>
             <AppStack.Screen name="root" component={BottomTabNavigator} />
+            <AppStack.Screen name="signup" component={SignUp}/>
         </AppStack.Navigator>
     );
   }

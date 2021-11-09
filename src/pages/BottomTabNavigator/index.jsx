@@ -2,6 +2,8 @@ import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Home from '../Home';
+import PetMap from '../PetMap';
+// import { StatusBar } from 'react-native';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -9,16 +11,22 @@ const Tab = createMaterialBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   return (
-      <Tab.Navigator 
-        initialRouteName="home"
-        activeColor="#7305e1"
-        inactiveColor="#9FA2AF"
-        barStyle={{
-          borderTopWidth: 0.4,
-          borderTopColor: '#9ba2ba',
-          backgroundColor: '#fff'
-        }}
-      >
+    <Tab.Navigator 
+    initialRouteName="home"
+    activeColor="#7305e1"
+    inactiveColor="#9FA2AF"
+    barStyle={{
+      borderTopWidth: 0.4,
+      borderTopColor: '#E2E2E2',
+      backgroundColor: '#fff'
+    }}
+    screenOptions={{ headerShown: false }}
+    >
+        {/* <StatusBar
+          barStyle="light-content"
+          backgroundColor="#e2e2e2"
+          translucent
+        /> */}
         <Tab.Screen 
           name="home" 
           component={Home}
@@ -31,7 +39,7 @@ const BottomTabNavigator = () => {
         />
         <Tab.Screen
           name="mapa" 
-          component={Home}
+          component={PetMap}
           options={{
             tabBarLabel: 'Mapa',
             tabBarIcon: ({ color }) => (

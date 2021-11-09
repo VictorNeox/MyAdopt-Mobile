@@ -6,7 +6,7 @@ import Routes from './src/router/routes';
 
 export default function App() {
   return (
-    <View style={{ flex: 1, backgroundColor: "#7305e1" }}>
+    <View style={{ flex: 1, backgroundColor: "#7305e1"}}>
       <StatusBar
         barStyle="light-content"
         backgroundColor="#7305e1"

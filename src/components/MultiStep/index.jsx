@@ -42,9 +42,9 @@ const MultiStep = ({ children, formRef }) => {
 
   const handleNextStep = async () => {
     formRef.current?.setErrors({});
-    if (currentStep === 0 && !await handleValidateFirstStep()) return;
-    else if (currentStep === 1 && !await handleValidateSecondStep()) return;
-    else if (currentStep === 2 && !await handleValidateThirdStep()) return;
+    // if (currentStep === 0 && !await handleValidateFirstStep()) return;
+    // else if (currentStep === 1 && !await handleValidateSecondStep()) return;
+    // else if (currentStep === 2 && !await handleValidateThirdStep()) return;
 
     if (currentStep === numberOfSteps - 1) {
       return formRef.current?.submitForm();
