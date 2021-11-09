@@ -18,10 +18,13 @@ import {
 import CustomSlider from '../CustomSlider';
 
 import capitalize from '../../utils/capitalize';
+import ReportModal from '../ReportModal';
 
 const PetPost = ({ data: post }) => {
 
   const [data, setData] = useState(post);
+
+  const [reportModal, setReportModal] = useState(false);
 
   const handleLikePost = (petId) => {
     const pet = data
@@ -37,10 +40,14 @@ const PetPost = ({ data: post }) => {
     setData({ ...pet });
   }
 
+  const handleReportModal = () => {
+    setReportModal(!reportModal);
+  }
+
   return (
     <Container>
       <UserContainer>
-        <TouchableOpacity style={{ position: 'absolute', right: 16, bottom: 14 }}>
+        <TouchableOpacity onPress={handleReportModal} style={{ position: 'absolute', right: 16, bottom: 14 }}>
           <MaterialCommunityIcons
             name='alert'
             size={22}
@@ -94,6 +101,7 @@ const PetPost = ({ data: post }) => {
         />
         <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{data.likes}</Text>
       </LikesContainer>
+      <ReportModal isOpened={reportModal} setIsOpened={setReportModal}/>
     </Container>
   );
 }
