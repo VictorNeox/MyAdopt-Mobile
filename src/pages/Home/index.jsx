@@ -147,6 +147,13 @@ const Home = () => {
         renderItem={({ item: post }) => (
           <View>
             <UserContainer>
+              <TouchableOpacity style={{ position: 'absolute', right: 16, bottom: 14 }}>
+                <MaterialCommunityIcons
+                  name='alert'
+                  size={22}
+                  color={'#e02041'}
+                />
+              </TouchableOpacity>
               <UserImage
                 source={{ uri: post.userImage }}
                 style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
