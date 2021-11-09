@@ -32,8 +32,12 @@ const PetDetail = () => {
     navigation.navigate('home');
   }
 
-  const sendWhatsapp = () => {
-    Linking.openURL(`whatsapp://send?phone=55${data.whatsapp}&text=${message}`)
+  const sendWhatsapp = async () => {
+    try {
+      await Linking.openURL(`whatsapp://send?phone=55${data.whatsapp}&text=${message}`)
+    } catch (err) {
+      alert('Erro ao abrir o whatsapp');
+    }
   }
 
   const sendMail = () => {
