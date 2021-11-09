@@ -10,11 +10,14 @@ import {
   SearchInput,
   LoadButton,
 } from './styles';
+import { useNavigation } from '@react-navigation/native';
 
 const PetMap = () => {
   const [currentRegion, setCurrentRegion] = useState(null);
 
   const [searchText, setSearchText] = useState('');
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     async function loadInitialPosition() {
@@ -62,7 +65,9 @@ const PetMap = () => {
       likes: 0,
       isLiked: false,
       latitude: -22.7105902,
-      longitude: -47.3170858
+      longitude: -47.3170858,
+      whatsapp: '19989269050',
+      email: 'victordeoliveira.contato@gmail.com',
     },
     {
       petId: 2,
@@ -87,7 +92,9 @@ const PetMap = () => {
       likes: 0,
       isLiked: false,
       latitude: -22.7111918,
-      longitude: -47.3169807
+      longitude: -47.3169807,
+      whatsapp: '19989269050',
+      email: 'victordeoliveira.contato@gmail.com',
     },
     {
       petId: 3,
@@ -113,11 +120,22 @@ const PetMap = () => {
       isLiked: false,
       latitude: -22.711310293556824,
       longitude: -47.31650895602984,
+      whatsapp: '19989269050',
+      email: 'victordeoliveira.contato@gmail.com',
     },
   ]);
 
   const handleRegionChanged = (region) => {
     setCurrentRegion(region);
+  }
+
+  const navigateToPetDetail = (data) => {
+    data.veterinaryCare = [
+      'Vacinação',
+      'Castração',
+      'Vermifugação'
+    ];
+    navigation.navigate('petDetail', { petData: data });
   }
 
   return (
@@ -127,11 +145,11 @@ const PetMap = () => {
           <Marker key={pet.petId} coordinate={{ longitude: pet.longitude, latitude: pet.latitude }}>
             <Image style={styles.avatar} source={{ uri: pet.petImages[0] }} />
             <Callout onPress={() => {
-              alert('foi')
+              navigateToPetDetail(pet);
             }} >
               <View style={styles.callout}>
                 <Text style={styles.petName}>
-                  {pet.petName} 
+                  {pet.petName}
                   <MaterialCommunityIcons
                     name={pet.gender.toLocaleLowerCase() === 'macho' ? 'gender-male' : 'gender-female'}
                     size={16}
