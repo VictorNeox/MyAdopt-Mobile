@@ -41,51 +41,20 @@ export const Logo = styled.Image`
   height: 50px;
 `;
 
-export const UserContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  padding-left: 10px;
-`;
-
-export const UserInformation = styled.View`
-  padding-top: 30px;
-  padding-left: 10px;
-  color: #616161;
-`;
-
-export const UserName = styled.Text`
-  color: #2b2b2b;
-`;
-
-
-export const Address = styled.Text`
-  font-size: 10px;
-  color: #2b2b2b;
-`;
-
-export const UserImage = styled.Image`
-  margin-top: 35px;
-  width: 35px;
+export const NewAdoption = styled(TouchableOpacity)`
+  margin: 16px 10px 16px 0;
+  align-self: flex-end;
   height: 35px;
-`
-export const PetImage = styled.Image`
-  height: 250px;
-  width: 100%;
-`;
-
-export const PostInformation = styled.View`
-  padding: 10px 20px;
-`;
-
-export const PostText = styled.Text`
-  color: #616161;
-`;
-
-export const LikesContainer = styled.View`
-  margin-top: 8px;
+  width: 30%;
+  justifyContent: center;
   flex-direction: row;
   align-items: center;
-  padding-left: 10px;
+  background-color: #7305e1;
+`;
+
+export const NewAdoptionText = styled.Text`
+  color: #fff;
+  fontWeight: bold;
 `;
 
 export const DetailsButton = styled(TouchableOpacity)`
@@ -103,21 +72,5 @@ export const DetailsButton = styled(TouchableOpacity)`
 export const DetailsText = styled.Text`
   color: #fff;
   fontSize: 15px;
-  fontWeight: bold;
-`;
-
-export const NewAdoption = styled(TouchableOpacity)`
-  margin: 16px 10px 16px 0;
-  align-self: flex-end;
-  height: 35px;
-  width: 30%;
-  justifyContent: center;
-  flex-direction: row;
-  align-items: center;
-  background-color: #7305e1;
-`;
-
-export const NewAdoptionText = styled.Text`
-  color: #fff;
   fontWeight: bold;
 `;

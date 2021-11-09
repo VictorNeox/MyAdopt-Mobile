@@ -26,7 +26,7 @@ const CustomSlider = ({ data }) => {
   };
 
   return (
-    <View>
+    <View style={{ marginTop: 12 }}>
       {data.length > 1 && (
        <IndexIndicator style={{ borderRadius: 100 }}>{index}/{data.length}</IndexIndicator>
       )}

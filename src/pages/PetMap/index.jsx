@@ -124,7 +124,7 @@ const PetMap = () => {
     <>
       <MapView style={{ flex: 1 }} onRegionChangeComplete={handleRegionChanged} initialRegion={currentRegion}>
         {mockedData.map(pet => (
-          <Marker key={pet.id} coordinate={{ longitude: pet.longitude, latitude: pet.latitude }}>
+          <Marker key={pet.petId} coordinate={{ longitude: pet.longitude, latitude: pet.latitude }}>
             <Image style={styles.avatar} source={{ uri: pet.petImages[0] }} />
             <Callout onPress={() => {
               alert('foi')

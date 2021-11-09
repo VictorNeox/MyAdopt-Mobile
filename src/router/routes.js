@@ -10,6 +10,7 @@ import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import Home from '../pages/Home';
 import BottomTabNavigator from '../pages/BottomTabNavigator';
+import PetDetail from '../pages/PetDetail';
 
 export default function Routes() {
     return(
@@ -17,6 +18,7 @@ export default function Routes() {
             <AppStack.Screen name="root" component={BottomTabNavigator} />
             <AppStack.Screen name="signin" component={SignIn}/>
             <AppStack.Screen name="signup" component={SignUp}/>
+            <AppStack.Screen name="petDetail" component={PetDetail} />
         </AppStack.Navigator>
     );
   }

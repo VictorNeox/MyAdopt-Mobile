@@ -1,22 +1,11 @@
 import React from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ParallaxImage } from 'react-native-snap-carousel';
-import CustomSlider from './CustomSlider';
+import { View, Text } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import logo from '../../assets/logo.png';
 
 import {
   Container,
-  UserImage,
-  UserContainer,
-  UserName,
-  PostInformation,
-  UserInformation,
-  Address,
-  PostText,
-  LikesContainer,
   DetailsButton,
   DetailsText,
   Logo,
@@ -28,8 +17,12 @@ import {
   HeaderText
 } from './styles';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import PetPost from '../../components/PetPost';
 
 const Home = () => {
+
+  const navigation = useNavigation();
 
   const [mockedData, setMockedData] = useState([
     {
@@ -54,6 +47,8 @@ const Home = () => {
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,
       isLiked: false,
+      whatsapp: '19989269050',
+      email: 'victordeoliveira.contato@gmail.com',
     },
     {
       petId: 2,
@@ -98,6 +93,8 @@ const Home = () => {
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,
       isLiked: false,
+      whatsapp: '19989269050',
+      email: 'victordeoliveira.contato@gmail.com',
     },
   ]);
 
@@ -105,19 +102,13 @@ const Home = () => {
 
   }
 
-  const handleLikePost = (petId) => {
-    const pets = mockedData
-
-    const pet = pets.findIndex((obj) => obj.petId === petId);
-    if (pets[pet].isLiked) {
-      pets[pet].isLiked = false;
-      pets[pet].likes--;
-    } else {
-      pets[pet].isLiked = true;
-      pets[pet].likes++;
-    }
-
-    setMockedData([...pets])
+  const navigateToPetDetail = (data) => {
+    data.veterinaryCare = [
+        'Vacinação',
+        'Castração',
+        'Vermifugação'
+    ];
+    navigation.navigate('petDetail', { petData: data });
   }
 
   return (
@@ -144,46 +135,8 @@ const Home = () => {
         )}
         renderItem={({ item: post }) => (
           <View>
-            <UserContainer>
-              <TouchableOpacity style={{ position: 'absolute', right: 16, bottom: 14 }}>
-                <MaterialCommunityIcons
-                  name='alert'
-                  size={22}
-                  color='#d12121'
-                />
-              </TouchableOpacity>
-              <UserImage
-                source={{ uri: post.userImage }}
-                style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
-              <UserInformation>
-                <UserName>{post.userName}</UserName>
-                <Address>{post.address.street}, {post.address.city} - {post.address.uf}</Address>
-              </UserInformation>
-            </UserContainer>
-            <PostInformation>
-              <PostText>
-                Nome: {post.petName}
-                <MaterialCommunityIcons
-                  name={post.gender.toLocaleLowerCase() === 'macho' ? 'gender-male' : 'gender-female'}
-                  size={16}
-                  color={post.gender.toLocaleLowerCase() === 'macho' ? '#00ADEF' : '#EA168F'}
-                />
-              </PostText>
-              <PostText>Idade: {post.age} anos</PostText>
-              <PostText>Porte: {post.size}</PostText>
-              <PostText>Descrição: {post.description}</PostText>
-            </PostInformation>
-            <CustomSlider data={post.petImages} />
-            <LikesContainer>
-              <MaterialCommunityIcons
-                name={post.isLiked ? 'heart' : 'heart-outline'}
-                color={post.isLiked ? 'red' : '#6b6b6b'}
-                size={26}
-                onPress={() => handleLikePost(post.petId)}
-              />
-              <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{post.likes}</Text>
-            </LikesContainer>
-            <DetailsButton style={{ borderRadius: 8 }}>
+            <PetPost data={post} />
+            <DetailsButton onPress={() => navigateToPetDetail(post)} style={{ borderRadius: 8 }}>
               <DetailsText>Ver mais detalhes</DetailsText>
               <MaterialCommunityIcons style={{ marginLeft: 8 }} name="arrow-right" size={16} color="#FFF" />
             </DetailsButton>
