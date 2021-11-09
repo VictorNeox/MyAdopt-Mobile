@@ -1,17 +1,16 @@
 import styled from 'styled-components/native';
 import { StatusBar, Platform, TouchableOpacity } from 'react-native';
 
-export const Container = styled.View`
+export const Container = styled.FlatList`
   background-color: #F2F2F2;
   flex: 1;
-  padding: 0 0px ${Platform.OS === "android" ? 50 : 30}px;
-  padding-top: ${(props) => Platform.OS === 'android' ? `${StatusBar.currentHeight + 10}px` : '0px' }
 `;
 
 export const Header = styled.View`
   flexDirection: row;
   justifyContent: space-between;
   alignItems: center;
+  padding-top: ${(props) => Platform.OS === 'android' ? `${StatusBar.currentHeight + 20}px` : '0px' }
   margin: 12px 12px 0 12px;
 `;
 
@@ -90,6 +89,7 @@ export const LikesContainer = styled.View`
 
 export const DetailsButton = styled(TouchableOpacity)`
   margin-right: 10px;
+  margin-bottom: 8px;
   height: 40px;
   width: 45%;
   justifyContent: center;

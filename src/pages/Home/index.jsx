@@ -7,9 +7,9 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import logo from '../../assets/logo.png';
 
-import { 
-  Container, 
-  UserImage, 
+import {
+  Container,
+  UserImage,
   UserContainer,
   UserName,
   PostInformation,
@@ -22,7 +22,7 @@ import {
   Logo,
   NewAdoption,
   NewAdoptionText,
-  Title, 
+  Title,
   Description,
   Header,
   HeaderText
@@ -83,7 +83,7 @@ const Home = () => {
       userName: 'Víctor Rodrigues',
       pet: 'cachorro',
       petName: 'Nick',
-      gender: 'Macho',
+      gender: 'Femea',
       description: 'Dócil, amigável, brincalhão',
       age: 3,
       size: 'grande',
@@ -104,7 +104,7 @@ const Home = () => {
   ]);
 
   const loadPets = async () => {
-    
+
   }
 
   const handleLikePost = (petId) => {
@@ -123,45 +123,55 @@ const Home = () => {
   }
 
   return (
-    <Container>
-      <Header>
-        <Logo source={logo} />
-        <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{mockedData.length} animais.</Text></HeaderText>
-      </Header>
-      
-      <Title>Bem-Vindo!</Title>
-      <Description>Selecione um dos animais abaixo para detalhes.</Description>
-
-      <NewAdoption style={{ borderRadius: 8 }}>
-        <NewAdoptionText>Nova doação</NewAdoptionText>
-      </NewAdoption>
-
-      <FlatList
+      <Container
         data={mockedData}
-        style={{ height: 100 }}
         keyExtractor={post => String(post.petId)}
         showsVerticalScrollIndicator={false}
         onEndReached={loadPets}
         onEndReachedThreshold={0.2}
+        ListHeaderComponent={(
+          <>
+            <Header>
+                <Logo source={logo} />
+                <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{mockedData.length} animais.</Text></HeaderText>
+            </Header>
+
+            <Title>Bem-Vindo!</Title>
+            <Description>Selecione um dos animais abaixo para detalhes.</Description>
+
+            <NewAdoption style={{ borderRadius: 8 }}>
+              <NewAdoptionText>Nova doação</NewAdoptionText>
+            </NewAdoption>
+          </>
+        )}
         renderItem={({ item: post }) => (
           <View>
             <UserContainer>
-              <UserImage 
-                source={{ uri: post.userImage }} 
-                style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }}/>
+              <UserImage
+                source={{ uri: post.userImage }}
+                style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
               <UserInformation>
                 <UserName>{post.userName}</UserName>
                 <Address>{post.address.street}, {post.address.city} - {post.address.uf}</Address>
               </UserInformation>
             </UserContainer>
             <PostInformation>
-              <PostText>{post.petName}, {post.age} anos. </PostText>
+              <PostText>
+                Nome: {post.petName}
+                <MaterialCommunityIcons
+                  style={{ paddingLeft: 8 }}
+                  name={post.gender.toLocaleLowerCase() === 'macho' ? 'gender-male' : 'gender-female'}
+                  size={16}
+                  color={post.gender.toLocaleLowerCase() === 'macho' ? '#00ADEF' : '#EA168F'}
+                />
+              </PostText>
+              <PostText>Idade: {post.age} anos</PostText>
               <PostText>Porte: {post.size}</PostText>
               <PostText>Descrição: {post.description}</PostText>
             </PostInformation>
             <CustomSlider data={post.petImages} />
             <LikesContainer>
-              <MaterialCommunityIcons 
+              <MaterialCommunityIcons
                 name={post.isLiked ? 'heart' : 'heart-outline'}
                 color={post.isLiked ? 'red' : '#6b6b6b'}
                 size={26}
@@ -170,13 +180,12 @@ const Home = () => {
               <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{post.likes}</Text>
             </LikesContainer>
             <DetailsButton style={{ borderRadius: 8 }}>
-                <DetailsText>Ver mais detalhes</DetailsText>
-                <MaterialCommunityIcons style={{ marginLeft: 8 }} name="arrow-right" size={16} color="#FFF"/>
+              <DetailsText>Ver mais detalhes</DetailsText>
+              <MaterialCommunityIcons style={{ marginLeft: 8 }} name="arrow-right" size={16} color="#FFF" />
             </DetailsButton>
           </View>
         )}
       />
-    </Container>
   );
 }
 
