@@ -4,6 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Home from '../Home';
 import PetMap from '../PetMap';
 import Profile from '../Profile';
+import Chat from '../Chat';
 // import { StatusBar } from 'react-native';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -50,7 +51,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="chat"
-        component={Home}
+        component={Chat}
         options={{
           tabBarLabel: 'Chat',
           tabBarIcon: ({ color }) => (

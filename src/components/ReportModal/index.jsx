@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Modal } from 'react-native';
+import { Alert, Modal } from 'react-native';
 
 import { Container, ModalView, Action, ActionText, ReportTitle, Actions } from './styles';
 
@@ -22,7 +22,9 @@ const ReportModal = ({ isOpened, setIsOpened }) => {
     try {
       formRef.current?.setErrors({});
       await schema.validate(data, { abortEarly: false });
-      alert(JSON.stringify(data));
+      
+      Alert.alert('Sucesso', 'Postagem reportada aos administradores.')
+      setIsOpened(false);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);

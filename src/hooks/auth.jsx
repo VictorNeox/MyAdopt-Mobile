@@ -52,7 +52,7 @@ export const AuthProvider = (({ children }) => {
         token,
       });
     } catch (err) {
-      Alert.alert('Ocorreu um erro, verifique as credenciais.');
+      Alert.alert('Erro', 'Ocorreu um erro, verifique as credenciais.');
     }
   });
 

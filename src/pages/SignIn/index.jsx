@@ -15,7 +15,7 @@ import { useAuth } from '../../hooks/auth';
 const SignIn = () => {
   const navigation = useNavigation();
   
-  const { signIn, user } = useAuth();
+  const { signIn } = useAuth();
 
   const formRef = useRef(null);
 
@@ -30,7 +30,7 @@ const SignIn = () => {
   const handleSubmit = async (data) => {
 
     const schema = Yup.object().shape({
-      user: Yup.string().required('Usuário é obrigatório'),
+      login: Yup.string().required('Usuário é obrigatório'),
       password: Yup.string().required('Senha é obrigatória'),
     });
     
@@ -38,6 +38,7 @@ const SignIn = () => {
       formRef.current?.setErrors({});
       await schema.validate(data, { abortEarly: false });
 
+      signIn(data)
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
@@ -60,7 +61,7 @@ const SignIn = () => {
                 <Title>Faça seu login</Title>
               </View>
               <Form ref={formRef} onSubmit={handleSubmit}>
-                <StyledInput name="user" placeholder="Usuário" hasFocusColor />
+                <StyledInput name="login" placeholder="Usuário" hasFocusColor />
                 <StyledInput name="password" placeholder="Senha" type="password" secureTextEntry hasFocusColor/>
 
                 <ForgotYourPass>
@@ -68,7 +69,7 @@ const SignIn = () => {
                 </ForgotYourPass>
                 <Actions>
 
-                  <Action onPress={navigateToHome}>
+                  <Action onPress={() => formRef.current?.submitForm()}>
                     <ActionText>Entrar</ActionText>
                   </Action>
 

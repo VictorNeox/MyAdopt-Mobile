@@ -19,10 +19,16 @@ import {
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PetPost from '../../components/PetPost';
+import { useAuth } from '../../hooks/auth';
 
 const Profile = () => {
 
   const navigation = useNavigation();
+
+  const { user } = useAuth();
+  if (!user) {
+    navigation.navigate('signin');
+  }
 
   const [mockedData, setMockedData] = useState([
     {

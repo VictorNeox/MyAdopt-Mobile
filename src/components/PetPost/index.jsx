@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Alert, Text, TouchableOpacity } from 'react-native';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -19,6 +19,7 @@ import CustomSlider from '../CustomSlider';
 
 import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
+import api from '../../services/api';
 
 const PetPost = ({ data: post, isProfile }) => {
 
@@ -44,15 +45,19 @@ const PetPost = ({ data: post, isProfile }) => {
     setReportModal(!reportModal);
   }
 
-  const handleDeletePost = () => {
-    alert('deletar post');
+  const handleDeletePost = async (index) => {
+    try {
+      await api.delete(`/pet/post/delete?id=${index}`);
+    } catch (err) {
+      Alert.alert('Erro', 'Ocorreu um erro, tente novamente.');
+    }
   }
 
   return (
     <Container>
       <UserContainer>
         {isProfile ? (
-          <TouchableOpacity onPress={handleDeletePost} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+          <TouchableOpacity onPress={() => handleDeletePost(data.petId)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
             <MaterialCommunityIcons
               name='delete-outline'
               size={22}
@@ -75,7 +80,7 @@ const PetPost = ({ data: post, isProfile }) => {
           style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
         <UserInformation>
           <UserName>{data.userName}</UserName>
-          <Address>{data.address.street}, {data.address.city} - {data.address.uf}</Address>
+          <Address>{data.adress.street}, {data.adress.city} - {data.adress.uf}</Address>
         </UserInformation>
       </UserContainer>
       <CustomSlider data={data.petImages} />
