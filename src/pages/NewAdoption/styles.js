@@ -58,6 +58,11 @@ export const Action = styled(TouchableOpacity)`
   margin-bottom: 8px;
 `;
 
+export const UploadImageAction = styled(Action)`
+  margin: 5px 0 0 0;
+  width: 255px;
+`;
+
 export const ActionText = styled.Text`
   color: #fff;
   font-size: 12px;
@@ -67,10 +72,19 @@ export const ActionText = styled.Text`
 
 export const ImagesView = styled.View`
   flex-direction: row;
+  width: 250px;
+  flex-wrap: wrap;
 `;
 
 export const PetImage = styled.Image`
   width: 100px;
   height: 100px;
   margin-right: 8px;
+`;
+
+export const ErrorText = styled.Text`
+  color: red;
+  font-size: 12px;
+  margin-left: 2px;
+  flex-wrap: wrap;
 `;

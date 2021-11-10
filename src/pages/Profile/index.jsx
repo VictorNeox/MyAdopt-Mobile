@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import PetPost from '../../components/PetPost';
 
-const Home = () => {
+const Profile = () => {
 
   const navigation = useNavigation();
 
@@ -130,7 +130,7 @@ const Home = () => {
             </Header>
 
             <Title>Bem-Vindo!</Title>
-            <Description>Selecione um dos animais abaixo para detalhes.</Description>
+            <Description>Aqui você pode visualizar suas adoções criadas.</Description>
 
             <NewAdoption onPress={navigateToNewAdoption} style={{ borderRadius: 8 }}>
               <NewAdoptionText>Nova adoção</NewAdoptionText>
@@ -139,15 +139,11 @@ const Home = () => {
         )}
         renderItem={({ item: post }) => (
           <View>
-            <PetPost data={post} />
-            <DetailsButton onPress={() => navigateToPetDetail(post)} style={{ borderRadius: 8 }}>
-              <DetailsText>Ver mais detalhes</DetailsText>
-              <MaterialCommunityIcons style={{ marginLeft: 8 }} name="arrow-right" size={16} color="#FFF" />
-            </DetailsButton>
+            <PetPost data={post} isProfile={true}/>
           </View>
         )}
       />
   );
 }
 
-export default Home;
+export default Profile;

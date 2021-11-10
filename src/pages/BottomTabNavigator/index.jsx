@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Home from '../Home';
 import PetMap from '../PetMap';
+import Profile from '../Profile';
 // import { StatusBar } from 'react-native';
 
 const Tab = createMaterialBottomTabNavigator();
@@ -59,7 +60,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="perfil"
-        component={Home}
+        component={Profile}
         options={{
           tabBarLabel: 'Perfil',
           tabBarIcon: ({ color }) => (

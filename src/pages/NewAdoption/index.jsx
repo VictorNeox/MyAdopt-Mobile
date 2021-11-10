@@ -2,23 +2,39 @@ import React, { useRef, useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Container, Image, Title, StyledInput, Actions, Action, ActionText, ImagesView, PetImage } from './styles';
+import { Container, Image, Title, StyledInput, ErrorText, ActionText, ImagesView, PetImage, UploadImageAction } from './styles';
 import SelectDropdown from 'react-native-select-dropdown'
 import logo from '../../assets/logo.png';
 const { width, height } = Dimensions.get("window");
 
+import MultiStep from './MultiStep';
+
 import * as ImagePicker from 'expo-image-picker';
+import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
+import getValidationErrors from '../../utils/getValidationErrors';
+
 
 const NewAdoption = () => {
   const formRef = useRef(null);
 
   const genders = ['Macho', 'Fêmea'];
+  const sizes = ['Grande', 'Médio', 'Pequeno'];
   const [images, setImages] = useState([]);
+
   const [name, setName] = useState('');
-  const [age, setAge] = useState(null);
+
+  const [age, setAge] = useState('');
+
   const [description, setDescription] = useState('');
+
+  const [veterinaryCares, setVeterinaryCares] = useState([]);
+
   const [gender, setGender] = useState('');
+
+  const [size, setSize] = useState('');
+
+  const [errors, setErrors] = useState({});
 
   const navigation = useNavigation()
 
@@ -43,31 +59,88 @@ const NewAdoption = () => {
 
     const data = images;
 
-    console.log(result);
-
     if (!result.cancelled) {
       data.push(result.base64);
       setImages([...data]);
     }
   };
 
-  const handleSubmit = async () => {
-    const data = [
+  const getData = () => {
+    let cares = veterinaryCares.map((care) => care.trim());
+    const data = {
       name,
-      age,
+      age: parseInt(age) || 0,
       description,
+      gender,
+      size,
+      veterinaryCares: (cares.length > 0 && cares[0] !== '') ? cares : [],
       images
-    ];
+    };
+    return data;
   }
 
-  const navigateToFeed = () => {
-    navigation.navigate('root', { screen: 'home' });
+  const handleValidateFirstStep = async () => {
+    const schema = Yup.object().shape({
+      name: Yup.string().required('Nome é obrigatório'),
+      age: Yup.string().required('Idade é obrigatória'),
+      veterinaryCares: Yup.array(),
+      gender: Yup.string().required('Sexo é obrigatório'),
+    });
+
+    try {
+      setErrors({});
+      const data = getData();
+      console.log(data);
+      await schema.validate(data, { abortEarly: false });
+
+      return true;
+    } catch (err) {
+      console.log(err)
+      const errors = getValidationErrors(err);
+
+      setErrors(errors)
+      return false;
+    }
+  }
+
+  const handleValidateSecondStep = async () => {
+    const schema = Yup.object().shape({
+      description: Yup.string().required('Descrição é obrigatória'),
+      size: Yup.string().required('Porte é obrigatório'),
+      images: Yup.array().min(1, 'Necessário pelo menos 1 foto').required('Imagem é obrigatória'),
+    });
+
+    try {
+      setErrors({});
+      const data = getData();
+      await schema.validate(data, { abortEarly: false });
+
+      return true;
+    } catch (err) {
+      const errors = getValidationErrors(err);
+      setErrors(errors)
+      return false;
+    }
+  }
+
+  const handleSubmit = async () => {
+    const data = getData();
+
+    console.log(data);
   }
 
   const handleDeleteImage = (index) => {
     const data = images;
     data.splice(index, 1);
     setImages([...data]);
+  }
+
+  const handleVeterinaryCaresChange = (value) => {
+    const cares = value.split(',');
+
+    cares.map((care, index) => cares[index].trim())
+
+    setVeterinaryCares(cares);
   }
 
   return (
@@ -84,56 +157,90 @@ const NewAdoption = () => {
           <Image source={logo} />
           <Title>Cadastro de pet</Title>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <StyledInput name="name" placeholder="Nome" value={name} onChangeText={setName} />
-            <StyledInput name="description" placeholder="Descrição" value={description} onChangeText={setDescription}/>
-            <StyledInput name="age" keyboardType='numeric' placeholder="Idade" value={age} onChangeText={setAge} />
-            <SelectDropdown
-              data={genders}
-              onSelect={(selectedItem, index) => {
-                setGender(selectedItem);
-              }}
-              defaultButtonText={"Selecione o sexo"}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                return selectedItem;
-              }}
-              rowTextForSelection={(item, index) => {
-                return item;
-              }}
-              buttonStyle={styles.dropdown1BtnStyle}
-              buttonTextStyle={styles.dropdown1BtnTxtStyle}
-              renderDropdownIcon={() => {
-                return (
-                  // <FontAwesome name="chevron-down" color={"#444"} size={18} />
-                  <MaterialCommunityIcons name="chevron-down" size={18} color="#444" />
-                );
-              }}
-              dropdownIconPosition={"right"}
-              dropdownStyle={styles.dropdown1DropdownStyle}
-              rowStyle={styles.dropdown1RowStyle}
-              rowTextStyle={styles.dropdown1RowTxtStyle}
-            />
-            <Action style={{ marginTop: 5 }} onPress={pickImage}>
-              <ActionText style={{ width: 255 }}>Selecionar imagem</ActionText>
-            </Action>
-            <ImagesView>
-              {images.map((image, index) => (
-                <View key={index} style={{ position: 'relative' }}>
-                  <TouchableOpacity onPress={() => handleDeleteImage(index)}>
-                    <MaterialCommunityIcons name="delete" size={18} color="#ebd7fe" />
-                  </TouchableOpacity>
-                  <PetImage source={{ uri: 'data:image/jpeg;base64,' + image }} style={{ borderRadius: 8 }} />
-                </View>
-              ))}
-            </ImagesView>
-            <Actions>
-              <Action onPress={navigateToFeed}>
-                <ActionText >Voltar</ActionText>
-              </Action>
-
-              <Action onPress={handleSubmit}>
-                <ActionText>Enviar</ActionText>
-              </Action>
-            </Actions>
+            <MultiStep 
+              handleSubmit={handleSubmit} 
+              handleValidateFirstStep={handleValidateFirstStep}
+              handleValidateSecondStep={handleValidateSecondStep}
+            >
+              <View>
+                {errors.name && (<ErrorText>{errors.name}</ErrorText>)}
+                <StyledInput name="name" placeholder="Nome" value={name} onChangeText={setName} />
+                {errors.age && (<ErrorText>{errors.age}</ErrorText>)}
+                <StyledInput name="age" keyboardType='numeric' placeholder="Idade" value={age.toString()} onChangeText={setAge} />
+                <StyledInput name="veterinaryCares" placeholder="Cuidados (separados por vírgula)" value={veterinaryCares.toString()} onChangeText={handleVeterinaryCaresChange} />
+                {errors.gender && (<ErrorText>{errors.gender}</ErrorText>)}
+                <SelectDropdown
+                  data={genders}
+                  onSelect={(selectedItem, index) => {
+                    setGender(selectedItem);
+                  }}
+                  defaultButtonText={"Selecione o sexo"}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={() => {
+                    return (
+                      // <FontAwesome name="chevron-down" color={"#444"} size={18} />
+                      <MaterialCommunityIcons name="chevron-down" size={18} color="#444" />
+                    );
+                  }}
+                  dropdownIconPosition={"right"}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                />
+              </View>
+              <View>
+                {errors.description && (<ErrorText>{errors.description}</ErrorText>)}
+                <StyledInput name="description" placeholder="Descrição" value={description} onChangeText={setDescription} />
+                {errors.size && (<ErrorText>{errors.size}</ErrorText>)}
+                <SelectDropdown
+                  data={sizes}
+                  onSelect={(selectedItem, index) => {
+                    setSize(selectedItem);
+                  }}
+                  defaultButtonText={"Selecione o porte"}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                  buttonStyle={styles.dropdown1BtnStyle}
+                  buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                  renderDropdownIcon={() => {
+                    return (
+                      // <FontAwesome name="chevron-down" color={"#444"} size={18} />
+                      <MaterialCommunityIcons name="chevron-down" size={18} color="#444" />
+                    );
+                  }}
+                  dropdownIconPosition={"right"}
+                  dropdownStyle={styles.dropdown1DropdownStyle}
+                  rowStyle={styles.dropdown1RowStyle}
+                  rowTextStyle={styles.dropdown1RowTxtStyle}
+                />
+                {errors.images && (<ErrorText>{errors.images}</ErrorText>)}
+                <UploadImageAction style={{ marginTop: 5, width: 250 }} onPress={pickImage}>
+                  <ActionText>Selecionar imagem</ActionText>
+                </UploadImageAction>
+                <ImagesView>
+                  {images.map((image, index) => (
+                    <View key={index} style={{ position: 'relative', marginTop: 16, }}>
+                      <TouchableOpacity onPress={() => handleDeleteImage(index)}>
+                        <MaterialCommunityIcons name="delete" size={18} color="#ebd7fe" />
+                      </TouchableOpacity>
+                      <PetImage source={{ uri: 'data:image/jpeg;base64,' + image }} style={{ borderRadius: 8 }} />
+                    </View>
+                  ))}
+                </ImagesView>
+              </View>
+            </MultiStep>
+            
           </View>
         </Container>
       </ScrollView>

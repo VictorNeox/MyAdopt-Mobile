@@ -20,7 +20,7 @@ import CustomSlider from '../CustomSlider';
 import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
 
-const PetPost = ({ data: post }) => {
+const PetPost = ({ data: post, isProfile }) => {
 
   const [data, setData] = useState(post);
 
@@ -44,16 +44,32 @@ const PetPost = ({ data: post }) => {
     setReportModal(!reportModal);
   }
 
+  const handleDeletePost = () => {
+    alert('deletar post');
+  }
+
   return (
     <Container>
       <UserContainer>
-        <TouchableOpacity onPress={handleReportModal} style={{ position: 'absolute', right: 16, bottom: 14 }}>
-          <MaterialCommunityIcons
-            name='alert'
-            size={22}
-            color='#d12121'
+        {isProfile ? (
+          <TouchableOpacity onPress={handleDeletePost} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+            <MaterialCommunityIcons
+              name='delete-outline'
+              size={22}
+              color='#616161'
+            />
+          </TouchableOpacity>
+        )
+        : (
+          <TouchableOpacity onPress={handleReportModal} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+            <MaterialCommunityIcons
+              name='alert'
+              size={22}
+              color='#d12121'
           />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
+
         <UserImage
           source={{ uri: data.userImage }}
           style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
@@ -92,16 +108,20 @@ const PetPost = ({ data: post }) => {
           </>
         )}
       </PostInformation>
-      <LikesContainer>
-        <MaterialCommunityIcons
-          name={data.isLiked ? 'heart' : 'heart-outline'}
-          color={data.isLiked ? 'red' : '#6b6b6b'}
-          size={26}
-          onPress={handleLikePost}
-        />
-        <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{data.likes}</Text>
-      </LikesContainer>
-      <ReportModal isOpened={reportModal} setIsOpened={setReportModal}/>
+      {!isProfile && (
+        <>
+          <LikesContainer>
+            <MaterialCommunityIcons
+              name={data.isLiked ? 'heart' : 'heart-outline'}
+              color={data.isLiked ? 'red' : '#6b6b6b'}
+              size={26}
+              onPress={handleLikePost}
+            />
+            <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{data.likes}</Text>
+          </LikesContainer>
+          <ReportModal isOpened={reportModal} setIsOpened={setReportModal} />
+        </>
+      )}
     </Container>
   );
 }
