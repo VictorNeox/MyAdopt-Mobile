@@ -61,10 +61,10 @@ const MultiStep = ({ children, handleSubmit, handleValidateFirstStep, handleVali
 
     setCurrentStep(currentStep - 1);
   }
-  
+
   const handleValidateThirdStep = async () => {
     const schema = Yup.object().shape({
-      address: Yup.object().shape({
+      adress: Yup.object().shape({
         city: Yup.string().required('Cidade é obrigatória'),
         uf: Yup.string().max(2).min(2).required('UF é obrigatório'),
         street: Yup.string().required('Rua é obrigatória'),

@@ -42,9 +42,9 @@ const MultiStep = ({ children, formRef }) => {
 
   const handleNextStep = async () => {
     formRef.current?.setErrors({});
-    // if (currentStep === 0 && !await handleValidateFirstStep()) return;
-    // else if (currentStep === 1 && !await handleValidateSecondStep()) return;
-    // else if (currentStep === 2 && !await handleValidateThirdStep()) return;
+    if (currentStep === 0 && !await handleValidateFirstStep()) return;
+    else if (currentStep === 1 && !await handleValidateSecondStep()) return;
+    else if (currentStep === 2 && !await handleValidateThirdStep()) return;
 
     if (currentStep === numberOfSteps - 1) {
       return formRef.current?.submitForm();
@@ -67,8 +67,7 @@ const MultiStep = ({ children, formRef }) => {
   const handleValidateFirstStep = async () => {
     const schema = Yup.object().shape({
       name: Yup.string().required('Nome é obrigatório'),
-      user: Yup.string().required('Usuário é obrigatório'),
-      cpf: Yup.string().required('CPF é obrigatório'),
+      login: Yup.string().required('Usuário é obrigatório'),
       password: Yup.string().min(8, 'Mínimo de 8 caractéres').required('Senha é obrigatória'),
       passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Confirmação não confere').required('Confirmação de senha é obrigatória'),
     });
@@ -89,7 +88,7 @@ const MultiStep = ({ children, formRef }) => {
 
   const handleValidateSecondStep = async () => {
     const schema = Yup.object().shape({
-      phone: Yup.string().max(16, 'Whatsapp deve ter 11 números.').min(11, 'Whatsapp deve ter 11 números.').required('Whatsapp é obrigatório'),
+      phoneNumber: Yup.string().max(16, 'Whatsapp deve ter 11 números.').min(11, 'Whatsapp deve ter 11 números.').required('Whatsapp é obrigatório'),
       email: Yup.string().email('Digite um e-mail válido').required('E-mail é obrigatório'),
     });
 
@@ -108,7 +107,7 @@ const MultiStep = ({ children, formRef }) => {
 
   const handleValidateThirdStep = async () => {
     const schema = Yup.object().shape({
-      address: Yup.object().shape({
+      adress: Yup.object().shape({
         city: Yup.string().required('Cidade é obrigatória'),
         uf: Yup.string().max(2).min(2).required('UF é obrigatório'),
         street: Yup.string().required('Rua é obrigatória'),

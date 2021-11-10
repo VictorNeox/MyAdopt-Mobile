@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync } from 'expo-location';
 
 import { Container, Image, Title, StyledInput, StyledInputMask, CityView, CityInput, UfInput, StreetView, StreetInput, NumberInput, LatLongView, LatLongInput } from './styles';
@@ -7,10 +7,10 @@ import { Container, Image, Title, StyledInput, StyledInputMask, CityView, CityIn
 import { Form } from '@unform/mobile';
 
 import logo from '../../assets/logo.png';
-import { useNavigation } from '@react-navigation/native';
 import MultiStep from '../../components/MultiStep';
 
 import api from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUp = () => {
 
@@ -28,7 +28,7 @@ const SignUp = () => {
             const {latitude, longitude} = coords;
 
             formRef.current.setData({
-              address: {
+              adress: {
                 longitude: longitude.toString(),
                 latitude: latitude.toString()
               }
@@ -40,17 +40,27 @@ const SignUp = () => {
   }, []);
 
 
-  const handleSubmit = (data) => {
-    alert(JSON.stringify(data))
+  const handleSubmit = async (data) => {
+    delete data.passwordConfirmation;
+    data.longitude = parseFloat(data.longitude);
+    data.latitude = parseFloat(data.latitude);
+    try {
+      await api.post('/auth');
+      Alert.alert('Sucesso', 'Usuário criado com sucesso.');
+      return navigation.navigate('signin');
+    } catch (err) {
+      Alert.alert('Erro', 'Um erro ocorreu, tente novamente.');
+    }
   }
 
   const getAddressByZipCode = async () => {
-    const zipcode = formRef.current.getFieldValue('address.zipcode');
+    const zipcode = formRef.current.getFieldValue('adress.zipcode');
     if (zipcode.length < 9) return;
     try {
       const { data } = await api.get(`http://viacep.com.br/ws/${zipcode}/json/`);
       formRef.current.setData({
-        address: {
+        ...formRef.current?.getData(),
+        adress: {
           city: data.localidade,
           uf: data.uf,
           neighbourhood: data.bairro,
@@ -80,14 +90,14 @@ const SignUp = () => {
             <MultiStep formRef={formRef}>
               <View>
                 <StyledInput name="name" placeholder="Nome completo" hasFocusColor />
-                <StyledInput name="user" placeholder="Usuário" hasFocusColor />
+                <StyledInput name="login" placeholder="Usuário" hasFocusColor />
                 <StyledInput name="password" placeholder="Senha" secureTextEntry />
                 <StyledInput name="passwordConfirmation" placeholder="Confirme sua senha" secureTextEntry hasFocusColor />
               </View>
 
               <View>
                 <StyledInputMask 
-                  name="phone"
+                  name="phoneNumber"
                   type={'cel-phone'}
                   options={{
                     maskType: 'BRL',
@@ -102,17 +112,17 @@ const SignUp = () => {
 
               <View>
                 <CityView>
-                  <CityInput name="address.city" placeholder="Cidade" hasFocusColor />
-                  <UfInput name="address.uf" placeholder="UF" hasFocusColor maxLength={2} minLength={2} showError={false}/>
+                  <CityInput name="adress.city" placeholder="Cidade" hasFocusColor />
+                  <UfInput name="adress.uf" placeholder="UF" hasFocusColor maxLength={2} minLength={2} showError={false}/>
                 </CityView>
                 <StreetView>
-                  <StreetInput name="address.street" placeholder="Rua" hasFocusColor />
-                  <NumberInput name="address.number" placeholder="Nº" hasFocusColor showError={false}/>
+                  <StreetInput name="adress.street" placeholder="Rua" hasFocusColor />
+                  <NumberInput name="adress.number" placeholder="Nº" hasFocusColor showError={false}/>
                 </StreetView>
 
-                <StyledInput name="address.neighbourhood" placeholder="Bairro" hasFocusColor />
+                <StyledInput name="adress.neighbourhood" placeholder="Bairro" hasFocusColor />
                 <StyledInputMask 
-                  name="address.zipcode"
+                  name="adress.zipcode"
                   type="zip-code"
                   placeholder="Cep" 
                   customOnChange={getAddressByZipCode}
@@ -120,8 +130,8 @@ const SignUp = () => {
                 />
                 
                 <LatLongView>
-                  <LatLongInput type="only-numbers" name="address.latitude" placeholder="Latitude" hasFocusColor editable={false}/>
-                  <LatLongInput  type="only-numbers" name="address.longitude" placeholder="Longitude" hasFocusColor editable={false}/>
+                  <LatLongInput type="only-numbers" name="adress.latitude" placeholder="Latitude" hasFocusColor editable={false}/>
+                  <LatLongInput  type="only-numbers" name="adress.longitude" placeholder="Longitude" hasFocusColor editable={false}/>
                 </LatLongView>
               </View>
 

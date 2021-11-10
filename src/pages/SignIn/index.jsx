@@ -10,8 +10,12 @@ import logo from '../../assets/logo.png';
 import getValidationErrors from '../../utils/getValidationErrors';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 
+import { useAuth } from '../../hooks/auth';
+
 const SignIn = () => {
   const navigation = useNavigation();
+  
+  const { signIn, user } = useAuth();
 
   const formRef = useRef(null);
 
@@ -29,10 +33,11 @@ const SignIn = () => {
       user: Yup.string().required('Usuário é obrigatório'),
       password: Yup.string().required('Senha é obrigatória'),
     });
-
+    
     try {
       formRef.current?.setErrors({});
       await schema.validate(data, { abortEarly: false });
+
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);

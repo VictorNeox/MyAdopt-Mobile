@@ -34,7 +34,7 @@ const Home = () => {
       description: 'Dócil, amigável, brincalhão',
       age: 3,
       size: 'grande',
-      address: {
+      adress: {
         street: 'Luiz Antônio Bertáglia',
         city: 'Americana',
         uf: 'SP'
@@ -59,7 +59,7 @@ const Home = () => {
       description: 'Dócil, amigável, brincalhão',
       age: 3,
       size: 'grande',
-      address: {
+      adress: {
         street: 'Luiz Antônio Bertáglia',
         city: 'Americana',
         uf: 'SP'
@@ -82,7 +82,7 @@ const Home = () => {
       description: 'Dócil, amigável, brincalhão',
       age: 3,
       size: 'grande',
-      address: {
+      adress: {
         street: 'Luiz Antônio Bertáglia',
         city: 'Americana',
         uf: 'SP'

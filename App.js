@@ -4,6 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import Routes from './src/router/routes';
 
+import { AuthProvider } from './src/hooks/auth';
+
 export default function App() {
   return (
     <View style={{ flex: 1, backgroundColor: "#7305e1"}}>
@@ -12,9 +14,11 @@ export default function App() {
         backgroundColor="#7305e1"
         translucent
       />
-      <NavigationContainer>
-            <Routes />
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+              <Routes />
+        </NavigationContainer>
+      </AuthProvider>
     </View>
   );
 }
