@@ -1,0 +1,267 @@
+import React, { useRef, useEffect, useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { Container, Image, Title, StyledInput, Actions, Action, ActionText, ImagesView, PetImage } from './styles';
+import SelectDropdown from 'react-native-select-dropdown'
+import logo from '../../assets/logo.png';
+const { width, height } = Dimensions.get("window");
+
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
+
+const NewAdoption = () => {
+  const formRef = useRef(null);
+
+  const genders = ['Macho', 'Fêmea'];
+  const [images, setImages] = useState([]);
+  const [name, setName] = useState('');
+  const [age, setAge] = useState(null);
+  const [description, setDescription] = useState('');
+  const [gender, setGender] = useState('');
+
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    const data = images;
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      data.push(result.base64);
+      setImages([...data]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const data = [
+      name,
+      age,
+      description,
+      images
+    ];
+  }
+
+  const navigateToFeed = () => {
+    navigation.navigate('root', { screen: 'home' });
+  }
+
+  const handleDeleteImage = (index) => {
+    const data = images;
+    data.splice(index, 1);
+    setImages([...data]);
+  }
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      enabled
+    >
+      <ScrollView
+        keyboardShouldPersistTaps="never"
+        contentContainerStyle={{ flex: 1 }}
+      >
+        <Container>
+          <Image source={logo} />
+          <Title>Cadastro de pet</Title>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <StyledInput name="name" placeholder="Nome" value={name} onChangeText={setName} />
+            <StyledInput name="description" placeholder="Descrição" value={description} onChangeText={setDescription}/>
+            <StyledInput name="age" keyboardType='numeric' placeholder="Idade" value={age} onChangeText={setAge} />
+            <SelectDropdown
+              data={genders}
+              onSelect={(selectedItem, index) => {
+                setGender(selectedItem);
+              }}
+              defaultButtonText={"Selecione o sexo"}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+              buttonStyle={styles.dropdown1BtnStyle}
+              buttonTextStyle={styles.dropdown1BtnTxtStyle}
+              renderDropdownIcon={() => {
+                return (
+                  // <FontAwesome name="chevron-down" color={"#444"} size={18} />
+                  <MaterialCommunityIcons name="chevron-down" size={18} color="#444" />
+                );
+              }}
+              dropdownIconPosition={"right"}
+              dropdownStyle={styles.dropdown1DropdownStyle}
+              rowStyle={styles.dropdown1RowStyle}
+              rowTextStyle={styles.dropdown1RowTxtStyle}
+            />
+            <Action style={{ marginTop: 5 }} onPress={pickImage}>
+              <ActionText style={{ width: 255 }}>Selecionar imagem</ActionText>
+            </Action>
+            <ImagesView>
+              {images.map((image, index) => (
+                <View key={index} style={{ position: 'relative' }}>
+                  <TouchableOpacity onPress={() => handleDeleteImage(index)}>
+                    <MaterialCommunityIcons name="delete" size={18} color="#ebd7fe" />
+                  </TouchableOpacity>
+                  <PetImage source={{ uri: 'data:image/jpeg;base64,' + image }} style={{ borderRadius: 8 }} />
+                </View>
+              ))}
+            </ImagesView>
+            <Actions>
+              <Action onPress={navigateToFeed}>
+                <ActionText >Voltar</ActionText>
+              </Action>
+
+              <Action onPress={handleSubmit}>
+                <ActionText>Enviar</ActionText>
+              </Action>
+            </Actions>
+          </View>
+        </Container>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  header: {
+    flexDirection: "row",
+    width,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F6F6F6",
+  },
+  headerTitle: { color: "#000", fontWeight: "bold", fontSize: 14 },
+  saveAreaViewContainer: { flex: 1, backgroundColor: "#000" },
+  viewContainer: { flex: 1, width: 550, backgroundColor: "#FFF" },
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: "10%",
+  },
+
+  dropdown1BtnStyle: {
+    width: 250,
+    height: 40,
+    backgroundColor: "#ebd7fe",
+    marginVertical: 5,
+    borderRadius: 10,
+  },
+  dropdown1BtnTxtStyle: { color: "gray", textAlign: "left", fontSize: 14, marginLeft: 2 },
+  dropdown1DropdownStyle: { backgroundColor: "#ebd7fe" },
+  dropdown1RowStyle: {
+    backgroundColor: "#ebd7fe",
+    borderBottomColor: "#ebd7fe",
+  },
+  dropdown1RowTxtStyle: { color: "#444", textAlign: "left", fontSize: 14 },
+
+  dropdown2BtnStyle: {
+    width: "80%",
+    height: 50,
+    backgroundColor: "#444",
+    borderRadius: 8,
+  },
+  dropdown2BtnTxtStyle: {
+    color: "#FFF",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  dropdown2DropdownStyle: { backgroundColor: "#444" },
+  dropdown2RowStyle: { backgroundColor: "#444", borderBottomColor: "#C5C5C5" },
+  dropdown2RowTxtStyle: {
+    color: "#FFF",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
+  dropdown3BtnStyle: {
+    width: "80%",
+    height: 50,
+    backgroundColor: "#FFF",
+    paddingHorizontal: 0,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#444",
+  },
+  dropdown3BtnChildStyle: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  dropdown3BtnImage: { width: 45, height: 45, resizeMode: "cover" },
+  dropdown3BtnTxt: {
+    color: "#444",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 14,
+    marginHorizontal: 10,
+  },
+  dropdown3DropdownStyle: { backgroundColor: "slategray" },
+  dropdown3RowStyle: {
+    backgroundColor: "slategray",
+    borderBottomColor: "#444",
+    height: 50,
+  },
+  dropdown3RowChildStyle: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  dropdownRowImage: { width: 45, height: 45, resizeMode: "cover" },
+  dropdown3RowTxt: {
+    color: "#F1F1F1",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 14,
+    marginHorizontal: 0,
+  },
+
+  dropdown4BtnStyle: {
+    width: "50%",
+    height: 50,
+    backgroundColor: "#FFF",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#444",
+  },
+  dropdown4BtnTxtStyle: { color: "#444", textAlign: "left" },
+  dropdown4DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown4RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown4RowTxtStyle: { color: "#444", textAlign: "left" },
+});
+
+export default NewAdoption;
