@@ -13,14 +13,7 @@ export const ModalView = styled.View`
   backgroundColor: white;
   padding: 35px;
   align-items: center;
-  shadow-color: #000;
-  shadow-offset: {
-    width: 0px;
-    height: 2px;
-  };
-  shadow-opacity: 0.25;
-  shadow-radius: 4px;
-  elevation: 5;
+
 `;
 
 export const ModalText = styled.Text`
