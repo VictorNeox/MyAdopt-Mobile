@@ -21,25 +21,9 @@ import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
 import api from '../../services/api';
 
-const PetPost = ({ data: post, isProfile }) => {
-
-  const [data, setData] = useState(post);
+const PetPost = ({ data, isProfile, handleLikePost }) => {
 
   const [reportModal, setReportModal] = useState(false);
-
-  const handleLikePost = (petId) => {
-    const pet = data
-
-    if (pet.isLiked) {
-      pet.isLiked = false;
-      pet.likes--;
-    } else {
-      pet.isLiked = true;
-      pet.likes++;
-    }
-
-    setData({ ...pet });
-  }
 
   const handleReportModal = () => {
     setReportModal(!reportModal);
@@ -52,12 +36,13 @@ const PetPost = ({ data: post, isProfile }) => {
       Alert.alert('Erro', 'Ocorreu um erro, tente novamente.');
     }
   }
-  
+
+
   return (
     <Container>
       <UserContainer>
         {isProfile ? (
-          <TouchableOpacity onPress={() => handleDeletePost(data.petId)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+          <TouchableOpacity onPress={() => handleDeletePost(data.post.pet_post_id)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
             <MaterialCommunityIcons
               name='delete-outline'
               size={22}
@@ -76,32 +61,32 @@ const PetPost = ({ data: post, isProfile }) => {
         )}
 
         <UserImage
-          source={{ uri: data.userImage }}
+          source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png' }}
           style={{ borderWidth: 2, borderColor: '#e2e2e2', borderRadius: 100 }} />
         <UserInformation>
-          <UserName>{data.userName}</UserName>
-          <Address>{data.adress.street}, {data.adress.city} - {data.adress.uf}</Address>
+          <UserName>{data.user.user_name}</UserName>
+          <Address>{data.user.street}, {data.user.city} - {data.user.state}</Address>
         </UserInformation>
       </UserContainer>
       <CustomSlider data={data.petImages} />
       <PostInformation>
         <PostText>
-          Nome: {data.petName}
+          Nome: {data.pet.name}
           <MaterialCommunityIcons
-            name={data.gender.toLocaleLowerCase() === 'macho' ? 'gender-male' : 'gender-female'}
+            name={data.pet.gender.toLocaleLowerCase() === 'm' ? 'gender-male' : 'gender-female'}
             size={16}
-            color={data.gender.toLocaleLowerCase() === 'macho' ? '#00ADEF' : '#EA168F'}
+            color={data.pet.gender.toLocaleLowerCase() === 'm' ? '#00ADEF' : '#EA168F'}
           />
         </PostText>
-        <PostText>Idade: {data.age} anos</PostText>
-        <PostText>Porte: {data.size}</PostText>
-        <PostText>Descrição: {data.description}</PostText>
-        {data.veterinaryCare && (
+        <PostText>Idade: {data.pet.age} anos</PostText>
+        <PostText>Porte: {data.pet.size}</PostText>
+        <PostText>Descrição: {data.post.description}</PostText>
+        {data.veterinaryCares && (
           <>
             <PostText style={{ fontWeight: 'bold', marginTop: 12 }}>Cuidados veterinários</PostText>
-            {data.veterinaryCare.map((care, index) => (
+            {data.veterinaryCares.map((care, index) => (
               <PostText key={index}>
-                {capitalize(care)}
+                {capitalize(care).trim()}
                 <MaterialCommunityIcons
                   style={{ marginLeft: 16 }}
                   name={'check'}
@@ -117,12 +102,12 @@ const PetPost = ({ data: post, isProfile }) => {
         <>
           <LikesContainer>
             <MaterialCommunityIcons
-              name={data.isLiked ? 'heart' : 'heart-outline'}
-              color={data.isLiked ? 'red' : '#6b6b6b'}
+              name={data.post.isLiked ? 'heart' : 'heart-outline'}
+              color={data.post.isLiked ? 'red' : '#6b6b6b'}
               size={26}
-              onPress={handleLikePost}
+              onPress={() => handleLikePost(data.pet.pet_id)}
             />
-            <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{data.likes}</Text>
+            <Text style={{ paddingLeft: 8, opacity: 0.8, fontSize: 16, color: '#6b6b6b' }}>{data.post.likes}</Text>
           </LikesContainer>
           <ReportModal isOpened={reportModal} setIsOpened={setReportModal} />
         </>
