@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import logo from '../../assets/logo.png';
 
 import {
   Container,
-  DetailsButton,
-  DetailsText,
   Logo,
   NewAdoption,
   NewAdoptionText,
@@ -26,9 +23,12 @@ const Profile = () => {
   const navigation = useNavigation();
 
   const { user } = useAuth();
-  if (!user) {
-    navigation.navigate('signin');
-  }
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigation.navigate('signin');
+  //   }
+  // }, []);
 
   const [mockedData, setMockedData] = useState([
     {
@@ -56,65 +56,10 @@ const Profile = () => {
       whatsapp: '19989269050',
       email: 'victordeoliveira.contato@gmail.com',
     },
-    {
-      petId: 2,
-      userName: 'Víctor Rodrigues',
-      pet: 'cachorro',
-      petName: 'Nick',
-      gender: 'Macho',
-      description: 'Dócil, amigável, brincalhão',
-      age: 3,
-      size: 'grande',
-      adress: {
-        street: 'Luiz Antônio Bertáglia',
-        city: 'Americana',
-        uf: 'SP'
-      },
-      petImages: [
-        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg',
-        'https://www.petz.com.br/cachorro/racas/husky-siberiano/img/husky-siberiano-caracteristicas-guia-racas.webp',
-        'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-      ],
-      userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
-      likes: 0,
-      isLiked: false,
-    },
-    {
-      petId: 3,
-      userName: 'Víctor Rodrigues',
-      pet: 'cachorro',
-      petName: 'Nick',
-      gender: 'Femea',
-      description: 'Dócil, amigável, brincalhão',
-      age: 3,
-      size: 'grande',
-      adress: {
-        street: 'Luiz Antônio Bertáglia',
-        city: 'Americana',
-        uf: 'SP'
-      },
-      petImages: [
-        'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-      ],
-      userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
-      likes: 0,
-      isLiked: false,
-      whatsapp: '19989269050',
-      email: 'victordeoliveira.contato@gmail.com',
-    },
   ]);
 
   const loadPets = async () => {
 
-  }
-
-  const navigateToPetDetail = (data) => {
-    data.veterinaryCare = [
-        'Vacinação',
-        'Castração',
-        'Vermifugação'
-    ];
-    navigation.navigate('petDetail', { petData: data });
   }
 
   const navigateToNewAdoption = () => {
@@ -132,7 +77,7 @@ const Profile = () => {
           <>
             <Header>
                 <Logo source={logo} />
-                <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{mockedData.length} animais.</Text></HeaderText>
+                <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{mockedData.length - 1} animais.</Text></HeaderText>
             </Header>
 
             <Title>Bem-Vindo!</Title>
@@ -145,7 +90,8 @@ const Profile = () => {
         )}
         renderItem={({ item: post }) => (
           <View>
-            <PetPost data={post} isProfile={true}/>
+              <NewAdoptionText style={{ fontWeight: 'bold', marginTop: 12, color: 'gray', textAlign: 'center' }}>Você não criou nenhuma postagem.</NewAdoptionText>
+            {/* <PetPost data={post} isProfile={true}/> */}
           </View>
         )}
       />

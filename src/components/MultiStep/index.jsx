@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import StepIndicator from 'react-native-step-indicator';
+import api from '../../services/api';
 
 const MultiStep = ({ children, formRef }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -74,13 +75,35 @@ const MultiStep = ({ children, formRef }) => {
 
     try {
       const formData = await formRef.current.getData();
+      const login = formData.login;
+      const email = formData.email;
       await schema.validate(formData, { abortEarly: false });
+
+      await api.get(`/user/userExist?login=${login}&email=${email}`);
 
       return true;
     } catch (err) {
-      const errors = getValidationErrors(err);
-      
-      formRef.current?.setErrors(errors);
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        
+        formRef.current?.setErrors(errors);
+      }
+
+      if (err.response.status === 409) {
+        const errors = {};
+        const emailErrorMessage = 'E-mail já está em uso';
+        const loginErrorMessage = 'Usuário já está em uso';
+        const message = err.response.data;
+        if (message ===  'Email and Login already exists') {
+          errors.email = emailErrorMessage;
+          errors.login = loginErrorMessage;
+        } else if (message === 'Login already exists') {
+          errors.login = loginErrorMessage;
+        } else if (message === 'Email already exists') {
+          errors.email = emailErrorMessage;
+        }
+        formRef.current?.setErrors(errors);
+      }
       return false;
     }
   }
@@ -109,7 +132,7 @@ const MultiStep = ({ children, formRef }) => {
     const schema = Yup.object().shape({
       adress: Yup.object().shape({
         city: Yup.string().required('Cidade é obrigatória'),
-        uf: Yup.string().max(2).min(2).required('UF é obrigatório'),
+        state: Yup.string().max(2).min(2).required('UF é obrigatório'),
         street: Yup.string().required('Rua é obrigatória'),
         number: Yup.string().required('Número é obrigatório'),
         neighbourhood: Yup.string().required('Bairro é obrigatório'),

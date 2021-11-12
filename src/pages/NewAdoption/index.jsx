@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, View, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { Container, Image, Title, StyledInput, ErrorText, ActionText, ImagesView, PetImage, UploadImageAction } from './styles';
@@ -126,7 +126,8 @@ const NewAdoption = () => {
   const handleSubmit = async () => {
     const data = getData();
 
-    console.log(data);
+    Alert.alert('Sucesso', 'Adoção criada com sucesso.');
+    navigation.navigate('root', { screen: 'home' });
   }
 
   const handleDeleteImage = (index) => {

@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { useAuth } from '../../hooks/auth';
 
@@ -9,9 +9,11 @@ const Chat = () => {
   const { user } = useAuth();
   const navigation = useNavigation();
 
-  if (!user) {
-    navigation.navigate('signin');
-  }
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate('signin');
+    }
+  }, []);
 
   return <View />;
 }

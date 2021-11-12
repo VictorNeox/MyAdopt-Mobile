@@ -28,6 +28,7 @@ const PetMap = () => {
           enableHighAccuracy: true,
         });
         const { latitude, longitude } = coords;
+        console.log(coords);
 
         setCurrentRegion({
           latitude,
@@ -44,15 +45,15 @@ const PetMap = () => {
   const [mockedData, setMockedData] = useState([
     {
       petId: 1,
-      userName: 'Víctor Rodrigues',
+      userName: 'Felipe Rodrigues',
       pet: 'cachorro',
-      petName: 'Nick',
+      petName: 'Thor',
       gender: 'Macho',
       description: 'Dócil, amigável, brincalhão',
       age: 3,
-      size: 'grande',
+      size: 'Grande',
       adress: {
-        street: 'Luiz Antônio Bertáglia',
+        street: 'Francisco Leandro',
         city: 'Americana',
         uf: 'SP'
       },
@@ -71,12 +72,12 @@ const PetMap = () => {
     },
     {
       petId: 2,
-      userName: 'Víctor Rodrigues',
+      userName: 'Alisson Alves',
       pet: 'cachorro',
       petName: 'Nick',
       gender: 'Macho',
-      description: 'Dócil, amigável, brincalhão',
-      age: 3,
+      description: 'Carinhoso',
+      age: 6,
       size: 'grande',
       adress: {
         street: 'Luiz Antônio Bertáglia',
@@ -85,8 +86,7 @@ const PetMap = () => {
       },
       petImages: [
         'https://www.petlove.com.br/images/breeds/193223/profile/original/golden_retriever-p.jpg?1532539102',
-        'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg'
+        'https://www.petlove.com.br/static/pets/dog/48881/medium_1531952446-photo.jpg',
       ],
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,
@@ -98,22 +98,20 @@ const PetMap = () => {
     },
     {
       petId: 3,
-      userName: 'Víctor Rodrigues',
-      pet: 'cachorro',
-      petName: 'Buddy',
+      userName: 'Matheus Linares',
+      pet: 'Gato',
+      petName: 'Ammy',
       gender: 'Femea',
-      description: 'Dócil, amigável, brincalhão',
-      age: 3,
-      size: 'grande',
+      description: 'Dócil',
+      age: 1,
+      size: 'Pequeno',
       adress: {
-        street: 'Luiz Antônio Bertáglia',
+        street: 'Anna Canciani Giordano',
         city: 'Americana',
         uf: 'SP'
       },
       petImages: [
-        'https://www.petz.com.br/cachorro/racas/samoieda/img/samoieda-caracteristicas-guia-racas.webp',
-        'https://www.azpetshop.com.br/blog/wp-content/uploads/2020/12/husky-siberiano-raca.jpg',
-        'https://www.infoescola.com/wp-content/uploads/2010/08/husky-siberiano_71212480.jpg'
+        'https://ogimg.infoglobo.com.br/in/24649523-8a0-224/FT1086A/x88249115.jpg.pagespeed.ic.GWoSdtcJ_C.jpg',
       ],
       userImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png',
       likes: 0,

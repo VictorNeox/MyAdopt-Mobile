@@ -8,7 +8,7 @@ import { Form } from '@unform/mobile';
 import logo from '../../assets/logo.png';
 
 import getValidationErrors from '../../utils/getValidationErrors';
-import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 
 import { useAuth } from '../../hooks/auth';
 
@@ -37,14 +37,17 @@ const SignIn = () => {
     try {
       formRef.current?.setErrors({});
       await schema.validate(data, { abortEarly: false });
-
-      signIn(data)
+      await signIn(data)
+      navigation.navigate('root', { screen: 'home' })
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         
         formRef.current?.setErrors(errors);
+        return false;
       }
+      console.log(err)
+      Alert.alert('Erro', 'Um erro ocorreu, cheque as credenciais.');
     }
   }
 

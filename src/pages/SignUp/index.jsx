@@ -26,7 +26,6 @@ const SignUp = () => {
                 enableHighAccuracy: true,
             });
             const {latitude, longitude} = coords;
-
             formRef.current.setData({
               adress: {
                 longitude: longitude.toString(),
@@ -42,13 +41,19 @@ const SignUp = () => {
 
   const handleSubmit = async (data) => {
     delete data.passwordConfirmation;
-    data.longitude = parseFloat(data.longitude);
-    data.latitude = parseFloat(data.latitude);
+    data.adress.longitude = parseFloat(data.adress.longitude);
+    data.adress.latitude = parseFloat(data.adress.latitude);
+    const addressData = data.adress;
+    delete data.adress;
     try {
-      await api.post('/auth');
+      const response = await api.post('/user/add', data);
+      addressData.fkUserId = response.data.id;
+      await api.post('/user/adress/add', addressData);
       Alert.alert('Sucesso', 'Usuário criado com sucesso.');
+      console.log(data);
       return navigation.navigate('signin');
     } catch (err) {
+      console.log(err.response)
       Alert.alert('Erro', 'Um erro ocorreu, tente novamente.');
     }
   }
@@ -65,6 +70,8 @@ const SignUp = () => {
           uf: data.uf,
           neighbourhood: data.bairro,
           street: data.logradouro,
+          longitude: formRef.current?.getFieldValue('adress.longitude'),
+          latitude: formRef.current?.getFieldValue('adress.latitude'),
         }
       });
     } catch (err) {
@@ -91,6 +98,7 @@ const SignUp = () => {
               <View>
                 <StyledInput name="name" placeholder="Nome completo" hasFocusColor />
                 <StyledInput name="login" placeholder="Usuário" hasFocusColor />
+                <StyledInput name="email" placeholder="E-mail" hasFocusColor />
                 <StyledInput name="password" placeholder="Senha" secureTextEntry />
                 <StyledInput name="passwordConfirmation" placeholder="Confirme sua senha" secureTextEntry hasFocusColor />
               </View>
@@ -107,13 +115,12 @@ const SignUp = () => {
                   placeholder="WhatsApp (com DDD)" 
                   hasFocusColor
                 />
-                <StyledInput name="email" placeholder="E-mail" hasFocusColor />
               </View>
 
               <View>
                 <CityView>
                   <CityInput name="adress.city" placeholder="Cidade" hasFocusColor />
-                  <UfInput name="adress.uf" placeholder="UF" hasFocusColor maxLength={2} minLength={2} showError={false}/>
+                  <UfInput name="adress.state" placeholder="UF" hasFocusColor maxLength={2} minLength={2} showError={false}/>
                 </CityView>
                 <StreetView>
                   <StreetInput name="adress.street" placeholder="Rua" hasFocusColor />

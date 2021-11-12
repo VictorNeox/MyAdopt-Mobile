@@ -52,7 +52,7 @@ const PetPost = ({ data: post, isProfile }) => {
       Alert.alert('Erro', 'Ocorreu um erro, tente novamente.');
     }
   }
-
+  
   return (
     <Container>
       <UserContainer>

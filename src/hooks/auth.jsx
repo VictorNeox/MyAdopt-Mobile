@@ -35,25 +35,22 @@ export const AuthProvider = (({ children }) => {
   }, []);
 
   const signIn = useCallback(async (data) => {
-    try {
-      const response = await api.post('/auth/login', data);
+    const { data: resData } = await api.post('/auth/login', data);
 
-      const { userData, token } = response.data;
+    console.log(resData);
+    const token = resData.token;
+    delete resData.token;
+    await AsyncStorage.multiSet([
+      ["@MyAdopt:token", token],
+      ["@MyAdopt:user", JSON.stringify(resData)],
+    ]);
 
-      await AsyncStorage.multiSet([
-        ["@MyAdopt:token", token],
-        ["@MyAdopt:user", JSON.stringify(userData)],
-      ]);
-  
-      api.defaults.headers.authorization = `Bearer ${token}`;
-  
-      setData({
-        userData,
-        token,
-      });
-    } catch (err) {
-      Alert.alert('Erro', 'Ocorreu um erro, verifique as credenciais.');
-    }
+    api.defaults.headers.authorization = `Bearer ${token}`;
+
+    setData({
+      user: resData,
+      token,
+    });
   });
 
   const signOut = useCallback(async () => {
