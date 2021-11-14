@@ -75,8 +75,8 @@ const PetDetail = () => {
         const { data: vetData } = await api.get(`/pet/vetcare/findAllByPetId?id=${petId}`);
 
         const veterinaryCares = vetData[0].description.split(',');
-        setData({...feedData[0], veterinaryCares});
-        message = `Olá ${feedData[0].user.user_name}, estou entrando em contato pois tenho interesse no animal de estimação ${capitalize(feedData[0].pet.name)} anunciado no aplicativo MyAdopt. Poderia me fornecer mais informações?`
+        setData({...feedData, veterinaryCares});
+        message = `Olá ${feedData.user.user_name}, estou entrando em contato pois tenho interesse no animal de estimação ${capitalize(feedData.pet.name)} anunciado no aplicativo MyAdopt. Poderia me fornecer mais informações?`
 
       } catch (err) {
         console.log(err)
