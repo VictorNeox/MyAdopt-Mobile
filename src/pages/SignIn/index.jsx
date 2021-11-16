@@ -46,7 +46,6 @@ const SignIn = () => {
         formRef.current?.setErrors(errors);
         return false;
       }
-      console.log(err)
       Alert.alert('Erro', 'Um erro ocorreu, cheque as credenciais.');
     }
   }

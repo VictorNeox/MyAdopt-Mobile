@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import getValidationErrors from '../../utils/getValidationErrors';
+import api from '../../services/api';
 
 
 const NewAdoption = () => {
@@ -28,7 +29,9 @@ const NewAdoption = () => {
 
   const [description, setDescription] = useState('');
 
-  const [veterinaryCares, setVeterinaryCares] = useState([]);
+  const [veterinaryCares, setVeterinaryCares] = useState('');
+
+  const [type, setType] = useState('');
 
   const [gender, setGender] = useState('');
 
@@ -43,7 +46,7 @@ const NewAdoption = () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          alert('Desculpe, precisamos de permissão à suas fotos para funcionar!');
         }
       }
     })();
@@ -54,26 +57,25 @@ const NewAdoption = () => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      base64: true,
     });
 
     const data = images;
 
     if (!result.cancelled) {
-      data.push(result.base64);
+      data.push(result.uri);
       setImages([...data]);
     }
   };
 
   const getData = () => {
-    let cares = veterinaryCares.map((care) => care.trim());
     const data = {
       name,
       age: parseInt(age) || 0,
       description,
       gender,
       size,
-      veterinaryCares: (cares.length > 0 && cares[0] !== '') ? cares : [],
+      type,
+      veterinaryCares: veterinaryCares,
       images
     };
     return data;
@@ -82,8 +84,8 @@ const NewAdoption = () => {
   const handleValidateFirstStep = async () => {
     const schema = Yup.object().shape({
       name: Yup.string().required('Nome é obrigatório'),
-      age: Yup.string().required('Idade é obrigatória'),
-      veterinaryCares: Yup.array(),
+      age: Yup.number().required('Idade é obrigatória'),
+      veterinaryCares: Yup.string(),
       gender: Yup.string().required('Sexo é obrigatório'),
     });
 
@@ -126,8 +128,53 @@ const NewAdoption = () => {
   const handleSubmit = async () => {
     const data = getData();
 
-    Alert.alert('Sucesso', 'Adoção criada com sucesso.');
-    navigation.navigate('root', { screen: 'home' });
+    try {
+      const { data: petData } = await api.post('/pet/add', {
+        name: data.name,
+        age: data.age,
+        type: data.type,
+        gender: data.gender,
+        size: data.size,
+      });
+
+      await api.post('pet/vetcare/add', {
+        description: veterinaryCares,
+        has_veterinary_care: true,
+        fkPetId: petData.id
+      });
+
+      const body = new FormData();
+
+      const formImages = images;
+
+      for (let i in formImages) {
+        let filename = formImages[i].split('/').pop();
+        body.append('image', { uri: formImages[i], name: filename, type: 'multipart/form-data' });
+      }
+
+      await api.post(`pet/add/image?id=${petData.id}`, body, {
+        headers: {
+          "Content-Type": `multipart/form-data`,
+        }
+      });
+
+      await api.post('/pet/post/add', {
+        description,
+        likes: 0,
+        fkPetId: petData.id,
+        created_at: "2021-11-14"
+      });
+
+      Alert.alert('Sucesso', 'Adoção criada com sucesso.');
+      navigation.navigate('root', { screen: 'profile' });
+      
+    } catch (err) {
+      Alert.alert('Erro', 'Um erro ocorreu, tente novamente');
+      console.log(err)
+    }
+
+    // Alert.alert('Sucesso', 'Adoção criada com sucesso.');
+    // navigation.navigate('root', { screen: 'home' });
   }
 
   const handleDeleteImage = (index) => {
@@ -135,15 +182,6 @@ const NewAdoption = () => {
     data.splice(index, 1);
     setImages([...data]);
   }
-
-  const handleVeterinaryCaresChange = (value) => {
-    const cares = value.split(',');
-
-    cares.map((care, index) => cares[index].trim())
-
-    setVeterinaryCares(cares);
-  }
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -158,8 +196,8 @@ const NewAdoption = () => {
           <Image source={logo} />
           <Title>Cadastro de pet</Title>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <MultiStep 
-              handleSubmit={handleSubmit} 
+            <MultiStep
+              handleSubmit={handleSubmit}
               handleValidateFirstStep={handleValidateFirstStep}
               handleValidateSecondStep={handleValidateSecondStep}
             >
@@ -168,12 +206,15 @@ const NewAdoption = () => {
                 <StyledInput name="name" placeholder="Nome" value={name} onChangeText={setName} />
                 {errors.age && (<ErrorText>{errors.age}</ErrorText>)}
                 <StyledInput name="age" keyboardType='numeric' placeholder="Idade" value={age.toString()} onChangeText={setAge} />
-                <StyledInput name="veterinaryCares" placeholder="Cuidados (separados por vírgula)" value={veterinaryCares.toString()} onChangeText={handleVeterinaryCaresChange} />
+                <StyledInput name="veterinaryCares" placeholder="Cuidados (separados por vírgula)" value={veterinaryCares} onChangeText={setVeterinaryCares} />
+                <StyledInput name="type" placeholder="Espécie" value={type} onChangeText={setType} />
                 {errors.gender && (<ErrorText>{errors.gender}</ErrorText>)}
                 <SelectDropdown
                   data={genders}
                   onSelect={(selectedItem, index) => {
-                    setGender(selectedItem);
+                    const value = selectedItem.toLowerCase();
+                    if (value === 'macho') setGender('M');
+                    if (value === 'fêmea') setGender('F');
                   }}
                   defaultButtonText={"Selecione o sexo"}
                   buttonTextAfterSelection={(selectedItem, index) => {
@@ -203,7 +244,10 @@ const NewAdoption = () => {
                 <SelectDropdown
                   data={sizes}
                   onSelect={(selectedItem, index) => {
-                    setSize(selectedItem);
+                    const value = selectedItem.toLowerCase();
+                    if (value === 'grande') setSize('large');
+                    if (value === 'médio') setSize('medium');
+                    if (value === 'pequeno') setSize('small');
                   }}
                   defaultButtonText={"Selecione o porte"}
                   buttonTextAfterSelection={(selectedItem, index) => {
@@ -235,13 +279,13 @@ const NewAdoption = () => {
                       <TouchableOpacity onPress={() => handleDeleteImage(index)}>
                         <MaterialCommunityIcons name="delete" size={18} color="#ebd7fe" />
                       </TouchableOpacity>
-                      <PetImage source={{ uri: 'data:image/jpeg;base64,' + image }} style={{ borderRadius: 8 }} />
+                      <PetImage source={{ uri: image }} style={{ borderRadius: 8 }} />
                     </View>
                   ))}
                 </ImagesView>
               </View>
             </MultiStep>
-            
+
           </View>
         </Container>
       </ScrollView>

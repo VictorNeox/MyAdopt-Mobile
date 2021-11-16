@@ -20,8 +20,10 @@ import CustomSlider from '../CustomSlider';
 import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
 import api from '../../services/api';
+import translatePetSize from '../../services/translatePetSize';
+import { useEffect } from 'react/cjs/react.development';
 
-const PetPost = ({ data, isProfile, handleLikePost }) => {
+const PetPost = ({ data, isProfile, handleLikePost, loadPets = null }) => {
 
   const [reportModal, setReportModal] = useState(false);
 
@@ -31,7 +33,9 @@ const PetPost = ({ data, isProfile, handleLikePost }) => {
 
   const handleDeletePost = async (index) => {
     try {
-      await api.delete(`/pet/post/delete?id=${index}`);
+      await api.delete(`/pet/delete?id=${index}`);
+      loadPets();
+      Alert.alert('Sucesso', 'Adoção excluída com sucesso');
     } catch (err) {
       Alert.alert('Erro', 'Ocorreu um erro, tente novamente.');
     }
@@ -42,7 +46,7 @@ const PetPost = ({ data, isProfile, handleLikePost }) => {
     <Container>
       <UserContainer>
         {isProfile ? (
-          <TouchableOpacity onPress={() => handleDeletePost(data.post.pet_post_id)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+          <TouchableOpacity onPress={() => handleDeletePost(data.pet.pet_id)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
             <MaterialCommunityIcons
               name='delete-outline'
               size={22}
@@ -50,15 +54,15 @@ const PetPost = ({ data, isProfile, handleLikePost }) => {
             />
           </TouchableOpacity>
         )
-        : (
-          <TouchableOpacity onPress={handleReportModal} style={{ position: 'absolute', right: 16, bottom: 14 }}>
-            <MaterialCommunityIcons
-              name='alert'
-              size={22}
-              color='#d12121'
-          />
-          </TouchableOpacity>
-        )}
+          : (
+            <TouchableOpacity onPress={handleReportModal} style={{ position: 'absolute', right: 16, bottom: 14 }}>
+              <MaterialCommunityIcons
+                name='alert'
+                size={22}
+                color='#d12121'
+              />
+            </TouchableOpacity>
+          )}
 
         <UserImage
           source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png' }}
@@ -79,7 +83,7 @@ const PetPost = ({ data, isProfile, handleLikePost }) => {
           />
         </PostText>
         <PostText>Idade: {data.pet.age} anos</PostText>
-        <PostText>Porte: {data.pet.size}</PostText>
+        <PostText>Porte: {translatePetSize(data.pet.size)}</PostText>
         <PostText>Descrição: {data.post.description}</PostText>
         {data.veterinaryCares && (
           <>

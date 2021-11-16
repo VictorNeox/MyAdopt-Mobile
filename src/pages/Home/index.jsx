@@ -17,10 +17,11 @@ import {
   HeaderText
 } from './styles';
 import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import PetPost from '../../components/PetPost';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
+import { useCallback } from 'react';
 
 const Home = () => {
 
@@ -29,19 +30,24 @@ const Home = () => {
   const { user } = useAuth();
 
   const [data, setData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const loadPets = async () => {
     try {
       const { data : resData } = await api.get('/feed/all');
+      setRefresh(true);
       setData(resData);
+      setRefresh(false);
     } catch (err) {
       Alert.alert('Erro', 'Um erro ocorreu no carregamento do feed.');
     }
   }
 
-  useEffect(() => {
-    loadPets();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadPets();
+    }, [])
+  );
 
   const navigateToPetDetail = (petId) => {
     navigation.navigate('petDetail', { petId });
@@ -69,7 +75,7 @@ const Home = () => {
     setData([...pets]);
   }
 
-
+  if (refresh) return null;
   return (
     <>
       {data.length < 1 && <View />}
