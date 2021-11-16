@@ -10,8 +10,11 @@ import {
   SearchInput,
   LoadButton,
 } from './styles';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import api from '../../services/api';
+import { useCallback } from 'react';
+
+import translatePetSize from '../../utils/translatePetSize';
 
 const PetMap = () => {
   const [currentRegion, setCurrentRegion] = useState(null);
@@ -21,16 +24,21 @@ const PetMap = () => {
   const [pets, setPets] = useState([]);
 
   const navigation = useNavigation();
-
-  useEffect(() => {
-    async function loadInitialPosition() {
+  async function loadInitialPosition() {
       const { granted } = await requestForegroundPermissionsAsync();
 
       if (granted) {
         const { coords } = await getCurrentPositionAsync({
           enableHighAccuracy: true,
         });
-        const { latitude, longitude } = coords;
+        let { latitude, longitude } = coords;
+
+        if (latitude === 37.4219807 && longitude === -122.0840163) {
+          latitude = -22.711310293556824;
+          longitude = -47.31650895602984;
+        }
+
+        console.log(latitude, longitude)
 
         setCurrentRegion({
           latitude,
@@ -38,12 +46,19 @@ const PetMap = () => {
           latitudeDelta: 0.04,
           longitudeDelta: 0.04,
         });
-        handleGetPetsInRegion(latitude, longitude);
       }
     }
 
-    loadInitialPosition();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadInitialPosition();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (!currentRegion) return;
+    handleGetPetsInRegion(currentRegion.latitude, currentRegion.longitude);
+  }, [currentRegion]);
 
   const handleGetPetsInRegion = async (latitude, longitude) => {
     try {
@@ -69,7 +84,17 @@ const PetMap = () => {
 
   return (
     <>
-        <MapView style={{ flex: 1 }} onRegionChangeComplete={handleRegionChanged} initialRegion={currentRegion}>
+        <MapView 
+          style={{ flex: 1 }} 
+          onRegionChangeComplete={handleRegionChanged} 
+          initialRegion={currentRegion}
+          initialCamera={{ 
+            pitch: 45,
+            heading: 90,
+            altitude: 20,
+            zoom: 2
+          }}
+        >
           {pets.map((post, index) => (
               <Marker key={index} coordinate={{ longitude: post.longitude, latitude: post.latitude }}>
                 <Image style={styles.avatar} source={{ uri: `http://192.168.50.126:8080/${post.image}` }} />
@@ -85,7 +110,7 @@ const PetMap = () => {
                         color={post.gender && post.gender.toLocaleLowerCase() === 'm' ? '#00ADEF' : '#EA168F'}
                       />
                     </Text>
-                    <Text style={styles.petTechs}>Porte {post.size}</Text>
+                    <Text style={styles.petTechs}>Porte {translatePetSize(post.size)}</Text>
                     <Text style={styles.petBio}>{post.description}</Text>
                   </View>
                 </Callout>

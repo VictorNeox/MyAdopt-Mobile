@@ -29,7 +29,7 @@ const PetDetail = () => {
   const [data, setData] = useState({});
 
   const { petId } = route.params;
-  let message = '';
+  const [message, setMessage] = useState('');
 
   const navigateToFeed = () => {
     navigation.navigate('home');
@@ -63,7 +63,7 @@ const PetDetail = () => {
   const sendMail = () => {
     MailComposer.composeAsync({
       subject: `Adoção de animal - App MyAdopt`,
-      recipients: [data.email],
+      recipients: [data.user.email],
       body: message,
     })
   }
@@ -76,10 +76,9 @@ const PetDetail = () => {
 
         const veterinaryCares = vetData[0].description.split(',');
         setData({...feedData, veterinaryCares});
-        message = `Olá ${feedData.user.user_name}, estou entrando em contato pois tenho interesse no animal de estimação ${capitalize(feedData.pet.name)} anunciado no aplicativo MyAdopt. Poderia me fornecer mais informações?`
+        setMessage(`Olá ${feedData.user.user_name}, estou entrando em contato pois tenho interesse no animal de estimação ${capitalize(feedData.pet.name)} anunciado no aplicativo MyAdopt. Poderia me fornecer mais informações?`)
 
       } catch (err) {
-        console.log(err)
         Alert.alert('Um erro ocorreu buscando dados do pet.');
       }
     }

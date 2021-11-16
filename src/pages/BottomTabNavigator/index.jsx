@@ -14,7 +14,7 @@ const Tab = createMaterialBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="mapa"
+      initialRouteName="home"
       activeColor="#7305e1"
       inactiveColor="#9FA2AF"
       barStyle={{

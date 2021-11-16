@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, Alert } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -9,7 +9,6 @@ import {
   DetailsButton,
   DetailsText,
   Logo,
-  NewAdoption,
   NewAdoptionText,
   Title,
   Description,
@@ -26,8 +25,6 @@ import { useCallback } from 'react';
 const Home = () => {
 
   const navigation = useNavigation();
-
-  const { user } = useAuth();
 
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -53,11 +50,6 @@ const Home = () => {
     navigation.navigate('petDetail', { petId });
   }
 
-  const navigateToNewAdoption = () => {
-    navigation.navigate('newAdoption');
-  }
-
-  const temporary = () => {}
 
   const handleLikePost = (petId) => {
     const index = data.findIndex((value, index) => value.pet.pet_id === petId);
@@ -76,6 +68,7 @@ const Home = () => {
   }
 
   if (refresh) return null;
+  
   return (
     <>
       {data.length < 1 && <View />}
@@ -83,7 +76,6 @@ const Home = () => {
         data={data}
         keyExtractor={data => String(data.pet.pet_id)}
         showsVerticalScrollIndicator={false}
-        onEndReached={temporary}
         onEndReachedThreshold={0.2}
         ListHeaderComponent={(
           <>
@@ -94,12 +86,16 @@ const Home = () => {
 
             <Title>Bem-Vindo(a)!</Title>
             <Description>Selecione um dos animais abaixo para detalhes.</Description>
-
-            <NewAdoption onPress={navigateToNewAdoption} style={{ borderRadius: 8 }}>
-              <NewAdoptionText>Nova adoção</NewAdoptionText>
-            </NewAdoption>
           </>
         )}
+        ListFooterComponent={() => {
+          if (data.length != 0) return null;
+          return (
+            <View>
+              <NewAdoptionText style={{ fontWeight: 'bold', marginTop: 12, color: 'gray', textAlign: 'center' }}>Nenhuma adoção disponível no momento.</NewAdoptionText>
+            </View>
+          )
+        }}
         renderItem={({ item }) => (
           <View>
             <PetPost data={item} handleLikePost={handleLikePost}/>

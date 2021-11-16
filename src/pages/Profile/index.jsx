@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Alert } from 'react-native';
 
 import logo from '../../assets/logo.png';
@@ -19,7 +19,7 @@ import PetPost from '../../components/PetPost';
 import { useAuth } from '../../hooks/auth';
 import api from '../../services/api';
 import { useCallback } from 'react';
-import { set } from 'react-native-reanimated';
+import SignOutButton from '../../components/SignOutButton';
 
 const Profile = () => {
 
@@ -30,11 +30,11 @@ const Profile = () => {
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigation.navigate('signin');
-  //   }
-  // }, []);
+  useFocusEffect(() => {
+    if (!user) {
+      navigation.navigate('signin');
+    }
+  });
 
   const loadPets = async () => {
     try {
@@ -79,7 +79,10 @@ const Profile = () => {
         <>
           <Header>
             <Logo source={logo} />
-            <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{data.length} animais.</Text></HeaderText>
+            <View>
+              <SignOutButton />
+              <HeaderText>Total de <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{data.length} animais.</Text></HeaderText>
+            </View>
           </Header>
 
           <Title>Bem-Vindo(a)!</Title>

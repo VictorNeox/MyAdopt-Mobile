@@ -20,8 +20,7 @@ import CustomSlider from '../CustomSlider';
 import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
 import api from '../../services/api';
-import translatePetSize from '../../services/translatePetSize';
-import { useEffect } from 'react/cjs/react.development';
+import translatePetSize from '../../utils/translatePetSize';
 
 const PetPost = ({ data, isProfile, handleLikePost, loadPets = null }) => {
 
