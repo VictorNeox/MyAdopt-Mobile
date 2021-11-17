@@ -62,7 +62,7 @@ const PetMap = () => {
 
   const handleGetPetsInRegion = async (latitude, longitude) => {
     try {
-      const { data } = await api.get(`/pet/post/findPostsInPositionRadius?latitude=${latitude}&longitude=${longitude}&distance=10`);
+      const { data } = await api.get(`/pet/post/findPostsInPositionRadius?latitude=${latitude}&longitude=${longitude}&distance=200`);
       setPets([...data]);
     } catch (err) {
       Alert.alert('Erro', 'Erro na busca de animais próximos.');
@@ -74,11 +74,6 @@ const PetMap = () => {
   }
 
   const navigateToPetDetail = (data) => {
-    data.veterinaryCare = [
-      'Vacinação',
-      'Castração',
-      'Vermifugação'
-    ];
     navigation.navigate('petDetail', { petId: data });
   }
 
