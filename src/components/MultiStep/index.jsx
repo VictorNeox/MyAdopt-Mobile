@@ -69,6 +69,7 @@ const MultiStep = ({ children, formRef }) => {
     const schema = Yup.object().shape({
       name: Yup.string().required('Nome é obrigatório'),
       login: Yup.string().required('Usuário é obrigatório'),
+      email: Yup.string().required('E-mail é obrigatório'),
       password: Yup.string().min(8, 'Mínimo de 8 caractéres').required('Senha é obrigatória'),
       passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Confirmação não confere').required('Confirmação de senha é obrigatória'),
     });
@@ -87,8 +88,9 @@ const MultiStep = ({ children, formRef }) => {
         const errors = getValidationErrors(err);
         
         formRef.current?.setErrors(errors);
+        return false;
       }
-
+      
       if (err.response.status === 409) {
         const errors = {};
         const emailErrorMessage = 'E-mail já está em uso';

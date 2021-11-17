@@ -67,7 +67,7 @@ const SignUp = () => {
         ...formRef.current?.getData(),
         adress: {
           city: data.localidade,
-          uf: data.uf,
+          state: data.uf,
           neighbourhood: data.bairro,
           street: data.logradouro,
           longitude: formRef.current?.getFieldValue('adress.longitude'),
