@@ -5,13 +5,19 @@ import Home from '../Home';
 import PetMap from '../PetMap';
 import Profile from '../Profile';
 import Chat from '../Chat';
+import { Alert, View } from 'react-native';
 // import { StatusBar } from 'react-native';
 
 const Tab = createMaterialBottomTabNavigator();
 
 // import { Container } from './styles';
 
+import { useAuth } from '../../hooks/auth';
+import { useNavigation } from '@react-navigation/native';
+
 const BottomTabNavigator = () => {
+  const { user } = useAuth();
+  const navigation = useNavigation();
   return (
     <Tab.Navigator
       initialRouteName="home"
@@ -22,7 +28,7 @@ const BottomTabNavigator = () => {
         borderTopColor: '#E2E2E2',
         backgroundColor: '#fff'
       }}
-      screenOptions={{ headerShown: false }}
+      shifting={false}
     >
       {/* <StatusBar
           barStyle="light-content"
@@ -49,26 +55,55 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="chat"
-        component={Chat}
-        options={{
-          tabBarLabel: 'Chat',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="chat" color={color} size={22} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="perfil"
-        component={Profile}
-        options={{
-          tabBarLabel: 'Perfil',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={22} />
-          ),
-        }}
-      />
+      {user && (
+        <Tab.Screen
+          name="chat"
+          component={Chat}
+          options={{
+            tabBarLabel: 'Chat',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="chat" color={color} size={22} />
+            ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              Alert.alert('Erro', 'Funcionalidade em desenvolvimento.')
+            }
+          }}
+        />
+      )}
+      {user ? (
+        <Tab.Screen
+          name="perfil"
+          component={Profile}
+          options={{
+            tabBarLabel: 'Perfil',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="account" color={color} size={22} />
+            ),
+          }}
+        />
+      )
+      :
+      (
+        <Tab.Screen
+          name="login"
+          component={Chat}
+          options={{
+            tabBarLabel: 'Entrar',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="login" color={color} size={22} />
+            ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              navigation.navigate('signin');
+            }
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 }

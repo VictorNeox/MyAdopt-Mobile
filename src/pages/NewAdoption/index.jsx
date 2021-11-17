@@ -170,7 +170,6 @@ const NewAdoption = () => {
       
     } catch (err) {
       Alert.alert('Erro', 'Um erro ocorreu, tente novamente');
-      console.log(err)
     }
 
     // Alert.alert('Sucesso', 'Adoção criada com sucesso.');

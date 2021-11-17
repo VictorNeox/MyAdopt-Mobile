@@ -21,10 +21,13 @@ import capitalize from '../../utils/capitalize';
 
 import * as MailComposer from 'expo-mail-composer';
 import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
 const PetDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const { user } = useAuth();
 
   const [data, setData] = useState({});
 
@@ -43,20 +46,19 @@ const PetDetail = () => {
     }
   }
 
-  const handleLikePost = (petId) => {
-    const index = data.findIndex((value, index) => value.pet.pet_id === petId);
+  const handleLikePost = () => {
 
     const pets = data;
 
-    if (pets[index].post.isLiked) {
-      pets[index].post.isLiked = false;
-      pets[index].post.likes--;
+    if (pets.post.isLiked) {
+      pets.post.isLiked = false;
+      pets.post.likes--;
     } else {
-      pets[index].post.isLiked = true;
-      pets[index].post.likes++;
+      pets.post.isLiked = true;
+      pets.post.likes++;
     }
 
-    setData([...pets]);
+    setData({...pets});
   }
 
 
@@ -74,7 +76,10 @@ const PetDetail = () => {
         const { data: feedData } = await api.get(`/feed/findAllFeedByPetId?id=${petId}`);
         const { data: vetData } = await api.get(`/pet/vetcare/findAllByPetId?id=${petId}`);
 
-        const veterinaryCares = vetData[0].description.split(',');
+        let veterinaryCares = vetData[0].description.split(',');
+        if (veterinaryCares.length == 1 && veterinaryCares[0] === "") {
+          veterinaryCares = []
+        }
         setData({...feedData, veterinaryCares});
         setMessage(`Olá ${feedData.user.user_name}, estou entrando em contato pois tenho interesse no animal de estimação ${capitalize(feedData.pet.name)} anunciado no aplicativo MyAdopt. Poderia me fornecer mais informações?`)
 
@@ -99,10 +104,12 @@ const PetDetail = () => {
             <PetPost data={data} handleLikePost={handleLikePost}/>
             <ContactTitle>Meios de contato disponíveis</ContactTitle>
             <ContactContainer>
-              <Action>
-                <MaterialCommunityIcons name="chat" size={16} color="#FFF" />
-                <ActionText>Chat</ActionText>
-              </Action>
+              {user && (
+                <Action>
+                  <MaterialCommunityIcons name="chat" size={16} color="#FFF" />
+                  <ActionText>Chat</ActionText>
+                </Action>
+              )}
               {data.user.phoneNumber && (
                 <Action onPress={sendWhatsapp}>
                   <MaterialCommunityIcons name="whatsapp" size={16} color="#FFF" />

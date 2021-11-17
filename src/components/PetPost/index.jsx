@@ -87,6 +87,9 @@ const PetPost = ({ data, isProfile, handleLikePost, loadPets = null }) => {
         {data.veterinaryCares && (
           <>
             <PostText style={{ fontWeight: 'bold', marginTop: 12 }}>Cuidados veterinários</PostText>
+            {data.veterinaryCares.length === 0 && (
+              <PostText style={{ marginTop: 8 }}>Nenhum cuidado veterinário informado pelo tutor</PostText>
+            )}
             {data.veterinaryCares.map((care, index) => (
               <PostText key={index}>
                 {capitalize(care).trim()}

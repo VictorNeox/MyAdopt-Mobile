@@ -38,6 +38,7 @@ const Profile = () => {
 
   const loadPets = async () => {
     try {
+      console.log(user.id);
       const { data: resData } = await api.get(`/feed/findAllFeedByUserId?id=${user.id}`);
       setRefresh(true);
       setData([...resData]);
