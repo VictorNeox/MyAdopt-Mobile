@@ -21,10 +21,13 @@ import capitalize from '../../utils/capitalize';
 import ReportModal from '../ReportModal';
 import api from '../../services/api';
 import translatePetSize from '../../utils/translatePetSize';
+import { useAuth } from '../../hooks/auth';
 
 const PetPost = ({ data, isProfile, handleLikePost, loadPets = null }) => {
 
   const [reportModal, setReportModal] = useState(false);
+
+  const { user } = useAuth();
 
   const handleReportModal = () => {
     setReportModal(!reportModal);
@@ -40,11 +43,10 @@ const PetPost = ({ data, isProfile, handleLikePost, loadPets = null }) => {
     }
   }
 
-
   return (
     <Container>
       <UserContainer>
-        {isProfile ? (
+        {user && data.user.user_id === user.id ? (
           <TouchableOpacity onPress={() => handleDeletePost(data.pet.pet_id)} style={{ position: 'absolute', right: 16, bottom: 14 }}>
             <MaterialCommunityIcons
               name='delete-outline'
